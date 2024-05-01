@@ -7,7 +7,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_MAXIMIZED;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_COMPAT_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
@@ -57,19 +56,18 @@ public class Window {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
+        // ---- Add Window Hints ----
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-        if (options.compatibleProfile) {
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-        } else {
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        }
+        
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
+        // ---- Center Window ----
         if (options.width > 0 && options.height > 0) {
             this.width = options.width;
             this.height = options.height;
@@ -80,10 +78,13 @@ public class Window {
             height = vidMode.height();
         }
 
+        // ---- Create the Window ----
         windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
         if (windowHandle == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
+
+        // --- Configure the Window ----
 
         glfwSetFramebufferSizeCallback(windowHandle, (window, w, h) -> resized(w, h));
 
@@ -166,7 +167,7 @@ public class Window {
     }
 
     public static class WindowOptions {
-        public boolean compatibleProfile;
+        //! If the fps is > 0 we do not use vSync
         public int fps;
         public int height;
         public int ups = Engine.TARGET_UPS;
