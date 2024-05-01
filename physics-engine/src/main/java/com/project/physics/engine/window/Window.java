@@ -33,19 +33,24 @@ public class Window {
 
         this.vSync = vSync;
 
-        run();
     }
 
-    private void run() {
+    public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
-        init(width, height, title);
+        try {
+            init(width, height, title);
+        } catch (Exception e) {
+            System.err.println("failed to initilize window");
+            e.printStackTrace();
+        }
+
         loop();
 
         glfwTerminate();
     }
 
-    private void init(int width, int height, String title) {
+    private void init(int width, int height, String title) throws Exception {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();

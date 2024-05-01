@@ -39,6 +39,7 @@ public class GameEngine implements Runnable {
     public GameEngine(int width, int height, String windowTitle, GameLogic gameLogic) {
         gameLoop = new Thread();
         this.window = new Window(640, 480, "Hello World!", true);
+        window.run();
         this.gameLogic = gameLogic;
     }
 }

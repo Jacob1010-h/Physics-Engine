@@ -26,7 +26,7 @@ public class Renderer {
         this.title = title;
     }
 
-    public long initWindow() {
+    public long initWindow() throws Exception {
         // Initialize GLFW. Most GLFW functions will not work before doing this.
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
