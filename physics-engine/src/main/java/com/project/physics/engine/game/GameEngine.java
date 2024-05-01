@@ -1,5 +1,7 @@
 package com.project.physics.engine.game;
 
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+
 import com.project.physics.engine.window.Window;
 
 public class GameEngine implements Runnable {
@@ -17,6 +19,10 @@ public class GameEngine implements Runnable {
 
     public void start() {
         gameLoop.start();
+    }
+
+    public double getTime() {
+        return glfwGetTime();
     }
 
     @Override
