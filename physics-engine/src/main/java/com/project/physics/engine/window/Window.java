@@ -4,15 +4,27 @@ import org.lwjgl.Version;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
+import com.project.physics.engine.components.Component.Color;
+import com.project.physics.engine.components.Quad;
 
 public class Window {
 
@@ -23,8 +35,6 @@ public class Window {
     private final String title;
 
     private final boolean vSync;
-    
-    private Renderer renderer;
 
     public Window(int width, int height, String title, boolean vSync) {
         this.width = width;
@@ -32,7 +42,6 @@ public class Window {
         this.title = title;
 
         this.vSync = vSync;
-
     }
 
     public void run() {
@@ -42,7 +51,6 @@ public class Window {
             init(width, height, title);
         } catch (Exception e) {
             System.err.println("failed to initilize window");
-            e.printStackTrace();
         }
 
         loop();
@@ -55,9 +63,8 @@ public class Window {
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
-        renderer = new Renderer(width, height, title);
-        windowID = renderer.initWindow();
-        
+        windowID = initWindow(width, height, title);
+
         createExitBinding();
 
         // Make the OpenGL context current
@@ -70,6 +77,20 @@ public class Window {
         // Make the window visible
         glfwShowWindow(windowID);
     }
+    
+    private long initWindow(int width, int height, String title) throws Exception {
+        // Initialize GLFW. Most GLFW functions will not work before doing this.
+        if (!glfwInit())
+            throw new IllegalStateException("Unable to initialize GLFW");
+
+        // Create the window
+        windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+
+        if (windowID == NULL)
+            throw new RuntimeException("Failed to create the GLFW window");
+
+        return windowID;
+    }
 
     private void createExitBinding() {
         // Setup a key callback. It will be called every time a key is pressed, repeated
@@ -81,13 +102,31 @@ public class Window {
     }
 
     private void loop() {
-        renderer.updateContext();
+        updateContext();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(windowID)) {
-            renderer.update();
+            updateWindow();
         }
+    }
+
+    private void updateWindow() {
+        glfwPollEvents();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        new Quad(100, 100, 200, 200, new Color(0, 255, 255)).render();
+        glfwSwapBuffers(windowID);
+    }
+    
+    private void updateContext() {
+        glfwMakeContextCurrent(windowID);
+
+        // This line is critical for LWJGL's interoperation with GLFW's
+        // OpenGL context, or any context that is managed externally.
+        // LWJGL detects the context that is current in the current thread,
+        // creates the GLCapabilities instance and makes the OpenGL
+        // bindings available for use.
+        GL.createCapabilities();
     }
     
     public boolean isKeyPressed(int keyCode) {
