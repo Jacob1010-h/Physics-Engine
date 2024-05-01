@@ -22,12 +22,16 @@ public class Window {
     private final int height;
     private final String title;
 
+    private final boolean vSync;
+    
     private Renderer renderer;
 
-    public Window(int width, int height, String title) {
+    public Window(int width, int height, String title, boolean vSync) {
         this.width = width;
         this.height = height;
         this.title = title;
+
+        this.vSync = vSync;
 
         run();
     }
@@ -53,8 +57,10 @@ public class Window {
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(windowID);
+
         // Enable v-sync
-        glfwSwapInterval(1);
+        if (vSync)
+            glfwSwapInterval(1);
 
         // Make the window visible
         glfwShowWindow(windowID);
