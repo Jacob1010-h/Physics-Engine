@@ -1,5 +1,7 @@
 package com.project.physics.game;
 
+import org.pmw.tinylog.Logger;
+
 import com.project.physics.engine.AppLogic;
 import com.project.physics.engine.Engine;
 import com.project.physics.engine.Render;
@@ -16,12 +18,12 @@ public class Main implements AppLogic {
 
     @Override
     public void cleanup() {
-        // Nothing to be done yet
+        Logger.info("The window has been closed/quit");
     }
 
     @Override
     public void init(Window window, Scene scene, Render render) {
-        // Nothing to be done yet
+        Logger.info("The window has been initialized");
     }
 
     @Override

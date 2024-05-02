@@ -170,7 +170,7 @@ public class Window {
         //! If the fps is > 0 we do not use vSync
         public int fps;
         public int height;
-        public int updatesPerSec = Engine.TARGET_UPS; // ? Update Per Second
+        public int updatesPerSec = Engine.TARGET_UPS; // ? Updates Per Second
         public int width;
     }
 }
