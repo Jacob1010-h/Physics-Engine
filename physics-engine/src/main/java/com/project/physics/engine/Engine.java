@@ -39,38 +39,38 @@ public class Engine {
     }
 
     private void run() {
-        long initialTime = System.currentTimeMillis();
+        long initialTime_ms = System.currentTimeMillis();
         
-        float updateTimeMillis = TimeUnit.MILLISECONDS.convert(windowOptions.updatesPerSec, TimeUnit.SECONDS);
-        float frameRateMillis = windowOptions.fps > 0 ? TimeUnit.MILLISECONDS.convert(windowOptions.fps, TimeUnit.SECONDS) : 0;
-        float deltaUpdate = 0;
-        float deltaFps = 0;
+        float updateTime_ms = TimeUnit.MILLISECONDS.convert(windowOptions.updatesPerSec, TimeUnit.SECONDS);
+        float frameRate_ms = windowOptions.fps > 0 ? TimeUnit.MILLISECONDS.convert(windowOptions.fps, TimeUnit.SECONDS) : 0;
+        float deltaUpdate_ms = 0;
+        float deltaFramesPer_ms = 0;
 
-        long updateTime = initialTime;
+        long updateTime = initialTime_ms;
         while (running && !window.windowShouldClose()) {
             window.pollEvents();
 
             long now = System.currentTimeMillis();
-            deltaUpdate += (now - initialTime) / updateTimeMillis;
-            deltaFps += (now - initialTime) / frameRateMillis;
+            deltaUpdate_ms += (now - initialTime_ms) / updateTime_ms;
+            deltaFramesPer_ms += (now - initialTime_ms) / frameRate_ms;
 
-            if (windowOptions.fps <= 0 || deltaFps >= 1) {
-                appLogic.input(window, scene, now - initialTime);
+            if (windowOptions.fps <= 0 || deltaFramesPer_ms >= 1) {
+                appLogic.input(window, scene, now - initialTime_ms);
             }
 
-            if (deltaUpdate >= 1) {
-                long diffTimeMillis = now - updateTime;
-                appLogic.update(window, scene, diffTimeMillis);
+            if (deltaUpdate_ms >= 1) {
+                long diffTime_ms = now - updateTime;
+                appLogic.update(window, scene, diffTime_ms);
                 updateTime = now;
-                deltaUpdate--;
+                deltaUpdate_ms--;
             }
 
-            if (windowOptions.fps <= 0 || deltaFps >= 1) {
+            if (windowOptions.fps <= 0 || deltaFramesPer_ms >= 1) {
                 render.render(window, scene);
-                deltaFps--;
+                deltaFramesPer_ms--;
                 window.update();
             }
-            initialTime = now;
+            initialTime_ms = now;
         }
 
         cleanup();
