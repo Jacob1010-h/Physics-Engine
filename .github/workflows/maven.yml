@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: cd $GITHUB_WORKSPACE && mvn -B package --file pom.xml
     - name: Compile Java code
       run: mvn compile
 
