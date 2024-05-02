@@ -1,5 +1,7 @@
 package com.project.physics.engine;
 
+import java.util.concurrent.TimeUnit;
+
 import com.project.physics.engine.Window.WindowOptions;
 
 public class Engine {
@@ -38,8 +40,9 @@ public class Engine {
 
     private void run() {
         long initialTime = System.currentTimeMillis();
-        float timeU = 1000.0f / windowOptions.ups;
-        float timeR = windowOptions.fps > 0 ? 1000.0f / windowOptions.fps : 0;
+        
+        float updateTimeMillis = TimeUnit.MILLISECONDS.convert(windowOptions.updatesPerSec, TimeUnit.SECONDS);
+        float frameRateMillis = windowOptions.fps > 0 ? TimeUnit.MILLISECONDS.convert(windowOptions.fps, TimeUnit.SECONDS) : 0;
         float deltaUpdate = 0;
         float deltaFps = 0;
 
@@ -48,8 +51,8 @@ public class Engine {
             window.pollEvents();
 
             long now = System.currentTimeMillis();
-            deltaUpdate += (now - initialTime) / timeU;
-            deltaFps += (now - initialTime) / timeR;
+            deltaUpdate += (now - initialTime) / updateTimeMillis;
+            deltaFps += (now - initialTime) / frameRateMillis;
 
             if (windowOptions.fps <= 0 || deltaFps >= 1) {
                 appLogic.input(window, scene, now - initialTime);
