@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package com.project.physics.engine.graphic;
+package com.project.physics.engine.graphic.shader;
 
 import com.project.physics.engine.math.Vector3f;
 import com.project.physics.engine.math.Vector4f;

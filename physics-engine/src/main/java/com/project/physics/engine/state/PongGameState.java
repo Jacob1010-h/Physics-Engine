@@ -31,9 +31,9 @@ import org.lwjgl.system.MemoryStack;
 
 import com.project.physics.engine.game.Ball;
 import com.project.physics.engine.game.Paddle;
-import com.project.physics.engine.graphic.Color;
-import com.project.physics.engine.graphic.Renderer;
-import com.project.physics.engine.graphic.Texture;
+import com.project.physics.engine.graphic.shader.Color;
+import com.project.physics.engine.graphic.shader.Texture;
+import com.project.physics.engine.graphic.window.Renderer;
 
 /**
  * This class contains a simple game.

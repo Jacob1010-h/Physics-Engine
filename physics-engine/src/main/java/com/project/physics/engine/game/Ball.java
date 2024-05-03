@@ -23,8 +23,8 @@
  */
 package com.project.physics.engine.game;
 
-import com.project.physics.engine.graphic.Color;
-import com.project.physics.engine.graphic.Texture;
+import com.project.physics.engine.graphic.shader.Color;
+import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.math.Vector2f;
 import com.project.physics.engine.state.PongGameState;
 import com.project.physics.engine.state.State.Collision;
@@ -103,7 +103,7 @@ public class Ball extends Entity {
      * @return true if a collision occured, else false
      */
     public boolean collidesWith(Paddle paddle) {
-        if (aabb.intersects(paddle.getAABB())) {
+        if (boundingBox.intersects(paddle.getAABB())) {
 
             if (position.x < paddle.getX()) {
                 /* Collision with right paddle */

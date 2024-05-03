@@ -29,11 +29,10 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
-import com.project.physics.engine.graphic.Color;
-import com.project.physics.engine.graphic.Texture;
+import com.project.physics.engine.graphic.shader.Color;
+import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.math.Vector2f;
 import com.project.physics.engine.state.PongGameState;
-
 import com.project.physics.engine.state.State.Collision;
 /**
  * This class represents a paddle for pong.

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.project.physics.engine.graphic;
+package com.project.physics.engine.graphic.shader;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
