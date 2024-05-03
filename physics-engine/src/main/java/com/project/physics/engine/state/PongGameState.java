@@ -42,14 +42,6 @@ import com.project.physics.engine.graphic.Texture;
  */
 public class PongGameState implements State {
 
-    public enum Collision {
-        NO_COLLISION,
-        COLLISION_TOP,
-        COLLISION_BOTTOM,
-        COLLISION_RIGHT,
-        COLLISION_LEFT
-    }
-
     private Texture texture;
     private final Renderer renderer;
 

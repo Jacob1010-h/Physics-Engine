@@ -32,6 +32,14 @@ import com.project.physics.engine.core.Game;
  */
 public interface State {
 
+    public enum Collision {
+        NO_COLLISION,
+        COLLISION_TOP,
+        COLLISION_BOTTOM,
+        COLLISION_RIGHT,
+        COLLISION_LEFT
+    }
+
     /**
      * Handles input of the state.
      */
