@@ -27,6 +27,7 @@ public class PhysicsEntity extends Entity {
         if (position.y < 0) {
             position.y = 0;
             direction.y = -direction.y;
+            // TODO! : change this to an actual gravity thing later
             changeSpeed(speed-70f);
             Logger.info("bottom collision: "+speed);
             return Collision.COLLISION_BOTTOM;
