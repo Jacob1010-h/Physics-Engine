@@ -35,6 +35,7 @@ import org.lwjgl.opengl.GL;
 import com.project.physics.engine.graphic.window.Renderer;
 import com.project.physics.engine.graphic.window.Window;
 import com.project.physics.engine.state.ExampleState;
+import com.project.physics.engine.state.PhysicsEngineState;
 import com.project.physics.engine.state.PongGameState;
 import com.project.physics.engine.state.StateMachine;
 import com.project.physics.engine.state.TextureState;
@@ -88,9 +89,10 @@ public abstract class Game {
 
     /**
      * This should be called to initialize and start the game.
+     * @param gameType
      */
-    public void start() {
-        init();
+    public void start(GameType gameType) {
+        init(gameType);
         gameLoop();
         dispose();
     }
@@ -115,8 +117,9 @@ public abstract class Game {
 
     /**
      * Initializes the game.
+     * @param gameType
      */
-    public void init() {
+    public void init(GameType gameType) {
         /* Set error callback */
         errorCallback = GLFWErrorCallback.createPrint();
         glfwSetErrorCallback(errorCallback);
@@ -136,7 +139,7 @@ public abstract class Game {
         renderer.init();
 
         /* Initialize states */
-        initStates();
+        initStates(gameType);
 
         /* Initializing done, set running to true */
         running = true;
@@ -144,12 +147,16 @@ public abstract class Game {
 
     /**
      * Initializes the states.
+     * @param gameType
      */
-    public void initStates() {
+    public void initStates(GameType gameType) {
         state.add("example", new ExampleState());
         state.add("texture", new TextureState());
         
-        state.add("game", new PongGameState(renderer));
+        switch (gameType) {
+            case PHYSICS -> state.add("game", new PhysicsEngineState(renderer));
+            case PONG -> state.add("game", new PongGameState(renderer));
+        }
         state.change("game");
     }
 

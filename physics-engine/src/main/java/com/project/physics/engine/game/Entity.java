@@ -40,7 +40,7 @@ public abstract class Entity {
 
     protected final AxisBoundingBox boundingBox;
 
-    protected final float speed;
+    protected float speed;
     protected Vector2f direction;
 
     protected final Color color;
@@ -102,6 +102,10 @@ public abstract class Entity {
         boundingBox.min.y = position.y;
         boundingBox.max.x = position.x + width;
         boundingBox.max.y = position.y + height;
+    }
+    
+    public void changeSpeed(float newSpeed) {
+        this.speed = newSpeed;
     }
 
     /**
