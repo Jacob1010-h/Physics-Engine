@@ -23,9 +23,9 @@
  */
 package com.project.physics.engine.game;
 
-import com.project.physics.engine.graphic.Color;
-import com.project.physics.engine.graphic.Renderer;
-import com.project.physics.engine.graphic.Texture;
+import com.project.physics.engine.graphic.shader.Color;
+import com.project.physics.engine.graphic.shader.Texture;
+import com.project.physics.engine.graphic.window.Renderer;
 import com.project.physics.engine.math.Vector2f;
 
 /**
@@ -38,7 +38,7 @@ public abstract class Entity {
     protected Vector2f previousPosition;
     protected Vector2f position;
 
-    protected final AxisBoundingBox aabb;
+    protected final AxisBoundingBox boundingBox;
 
     protected final float speed;
     protected Vector2f direction;
@@ -56,7 +56,7 @@ public abstract class Entity {
         previousPosition = new Vector2f(x, y);
         position = new Vector2f(x, y);
 
-        aabb = new AxisBoundingBox(this);
+        boundingBox = new AxisBoundingBox(this);
 
         this.speed = speed;
         direction = new Vector2f();
@@ -98,10 +98,10 @@ public abstract class Entity {
         Vector2f velocity = direction.scale(speed);
         position = position.add(velocity.scale(delta));
 
-        aabb.min.x = position.x;
-        aabb.min.y = position.y;
-        aabb.max.x = position.x + width;
-        aabb.max.y = position.y + height;
+        boundingBox.min.x = position.x;
+        boundingBox.min.y = position.y;
+        boundingBox.max.x = position.x + width;
+        boundingBox.max.y = position.y + height;
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class Entity {
     }
 
     public AxisBoundingBox getAABB() {
-        return aabb;
+        return boundingBox;
     }
 
 }
