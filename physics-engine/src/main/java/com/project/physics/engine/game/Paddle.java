@@ -33,8 +33,8 @@ import com.project.physics.engine.graphic.Color;
 import com.project.physics.engine.graphic.Texture;
 import com.project.physics.engine.math.Vector2f;
 import com.project.physics.engine.state.PongGameState;
-import com.project.physics.engine.state.PongGameState.Collision;
 
+import com.project.physics.engine.state.State.Collision;
 /**
  * This class represents a paddle for pong.
  *
