@@ -40,13 +40,15 @@ import com.project.physics.engine.graphic.Texture;
  *
  * @author Heiko Brumme
  */
-public class GameState implements State {
+public class PongGameState implements State {
 
-    public static final int NO_COLLISION = 0;
-    public static final int COLLISION_TOP = 1;
-    public static final int COLLISION_BOTTOM = 2;
-    public static final int COLLISION_RIGHT = 3;
-    public static final int COLLISION_LEFT = 4;
+    public enum Collision {
+        NO_COLLISION,
+        COLLISION_TOP,
+        COLLISION_BOTTOM,
+        COLLISION_RIGHT,
+        COLLISION_LEFT
+    }
 
     private Texture texture;
     private final Renderer renderer;
@@ -60,7 +62,7 @@ public class GameState implements State {
     private int gameWidth;
     private int gameHeight;
 
-    public GameState(Renderer renderer) {
+    public PongGameState(Renderer renderer) {
         this.renderer = renderer;
     }
 
@@ -70,6 +72,7 @@ public class GameState implements State {
         opponent.input(ball);
     }
 
+    @SuppressWarnings("incomplete-switch")
     @Override
     public void update(float delta) {
         /* Update position */
@@ -85,12 +88,8 @@ public class GameState implements State {
 
         /* Update score if necessary */
         switch (ball.checkBorderCollision(gameWidth, gameHeight)) {
-            case COLLISION_LEFT:
-                opponentScore++;
-                break;
-            case COLLISION_RIGHT:
-                playerScore++;
-                break;
+            case COLLISION_LEFT -> opponentScore++;
+            case COLLISION_RIGHT -> playerScore++;
         }
     }
 
@@ -167,4 +166,5 @@ public class GameState implements State {
         texture.delete();
     }
 
+    
 }

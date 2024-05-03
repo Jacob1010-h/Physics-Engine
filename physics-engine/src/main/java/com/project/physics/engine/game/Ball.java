@@ -26,11 +26,8 @@ package com.project.physics.engine.game;
 import com.project.physics.engine.graphic.Color;
 import com.project.physics.engine.graphic.Texture;
 import com.project.physics.engine.math.Vector2f;
-import static com.project.physics.engine.state.GameState.COLLISION_BOTTOM;
-import static com.project.physics.engine.state.GameState.COLLISION_LEFT;
-import static com.project.physics.engine.state.GameState.COLLISION_RIGHT;
-import static com.project.physics.engine.state.GameState.COLLISION_TOP;
-import static com.project.physics.engine.state.GameState.NO_COLLISION;
+import com.project.physics.engine.state.PongGameState;
+import com.project.physics.engine.state.PongGameState.Collision;
 
 /**
  * This class represents a ball for pong.
@@ -76,26 +73,26 @@ public class Ball extends Entity {
      *
      * @return Direction constant of the collision
      */
-    public int checkBorderCollision(int gameWidth, int gameHeight) {
+    public PongGameState.Collision checkBorderCollision(int gameWidth, int gameHeight) {
         if (position.y < 0) {
             position.y = 0;
             direction.y = -direction.y;
-            return COLLISION_BOTTOM;
+            return Collision.COLLISION_BOTTOM;
         }
         if (position.y > gameHeight - this.height) {
             position.y = gameHeight - this.height;
             direction.y = -direction.y;
-            return COLLISION_TOP;
+            return Collision.COLLISION_TOP;
         }
         if (position.x < 0) {
             reset((gameWidth - width) / 2f, (gameHeight - width) / 2f);
-            return COLLISION_LEFT;
+            return Collision.COLLISION_LEFT;
         }
         if (position.x > gameWidth - this.width) {
             reset((gameWidth - width) / 2f, (gameHeight - width) / 2f);
-            return COLLISION_RIGHT;
+            return Collision.COLLISION_RIGHT;
         }
-        return NO_COLLISION;
+        return Collision.NO_COLLISION;
     }
 
     /**

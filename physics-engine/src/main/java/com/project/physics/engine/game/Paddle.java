@@ -32,9 +32,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import com.project.physics.engine.graphic.Color;
 import com.project.physics.engine.graphic.Texture;
 import com.project.physics.engine.math.Vector2f;
-import static com.project.physics.engine.state.GameState.COLLISION_BOTTOM;
-import static com.project.physics.engine.state.GameState.COLLISION_TOP;
-import static com.project.physics.engine.state.GameState.NO_COLLISION;
+import com.project.physics.engine.state.PongGameState;
+import com.project.physics.engine.state.PongGameState.Collision;
 
 /**
  * This class represents a paddle for pong.
@@ -89,16 +88,16 @@ public class Paddle extends Entity {
      *
      * @return Direction constant of the collision
      */
-    public int checkBorderCollision(int gameHeight) {
+    public PongGameState.Collision checkBorderCollision(int gameHeight) {
         if (position.y < 0) {
             position.y = 0;
-            return COLLISION_BOTTOM;
+            return Collision.COLLISION_BOTTOM;
         }
         if (position.y > gameHeight - this.height) {
             position.y = gameHeight - this.height;
-            return COLLISION_TOP;
+            return Collision.COLLISION_TOP;
         }
-        return NO_COLLISION;
+        return Collision.NO_COLLISION;
     }
 
 }
