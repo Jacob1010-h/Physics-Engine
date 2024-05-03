@@ -69,7 +69,7 @@ public class PhysicsEngineState implements State {
         texture = Texture.loadTexture("./physics-engine/src/main/resources/pong.png");
 
         /* Initialize game objects */
-        float speed = 250f;
+        float speed = 9.5f;
         
         triangle = new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f);
 
