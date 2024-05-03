@@ -35,9 +35,9 @@ import org.lwjgl.opengl.GL;
 import com.project.physics.engine.graphic.Renderer;
 import com.project.physics.engine.graphic.Window;
 import com.project.physics.engine.state.ExampleState;
-import com.project.physics.engine.state.GameState;
 import com.project.physics.engine.state.LegacyExampleState;
 import com.project.physics.engine.state.LegacyTextureState;
+import com.project.physics.engine.state.PongGameState;
 import com.project.physics.engine.state.StateMachine;
 import com.project.physics.engine.state.TextureState;
 
@@ -155,7 +155,7 @@ public abstract class Game {
             state.add("example", new LegacyExampleState());
             state.add("texture", new LegacyTextureState());
         }
-        state.add("game", new GameState(renderer));
+        state.add("game", new PongGameState(renderer));
         state.change("game");
     }
 
