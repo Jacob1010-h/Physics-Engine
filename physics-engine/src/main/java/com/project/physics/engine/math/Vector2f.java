@@ -128,6 +128,12 @@ public class Vector2f {
         return new Vector2f(x, y);
     }
 
+    public Vector2f scale(Vector2f scalar) {
+        float x = this.x * scalar.x;
+        float y = this.y * scalar.y;
+        return new Vector2f(x, y);
+    }
+
     /**
      * Divides a vector by a scalar.
      *

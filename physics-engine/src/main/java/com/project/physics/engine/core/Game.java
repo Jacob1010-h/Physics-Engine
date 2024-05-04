@@ -32,7 +32,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import com.project.physics.engine.graphic.window.Renderer;
+import com.project.physics.engine.graphic.window.DynamicRenderer;
 import com.project.physics.engine.graphic.window.Window;
 import com.project.physics.engine.state.ExampleState;
 import com.project.physics.engine.state.PhysicsEngineState;
@@ -72,7 +72,7 @@ public abstract class Game {
     /**
      * Used for rendering.
      */
-    protected Renderer renderer;
+    protected DynamicRenderer renderer;
     /**
      * Stores the current state.
      */
@@ -83,7 +83,7 @@ public abstract class Game {
      */
     public Game() {
         timer = new Timer();
-        renderer = new Renderer();
+        renderer = new DynamicRenderer();
         state = new StateMachine();
     }
 
