@@ -11,6 +11,7 @@ public class PhysicsEntity extends Entity {
     private final Vector2f initVelocity =  new Vector2f(5.0f, 2f);
     private Vector2f velocity = initVelocity;
 
+    // ? This class should be allowed to render multiple balls at once but wont when put into the physics engine?
     public PhysicsEntity(Color color, Texture texture, float x, float y, float speed) {
         super(color, texture, x, y, speed, 20, 20, 20, 40);
     }
