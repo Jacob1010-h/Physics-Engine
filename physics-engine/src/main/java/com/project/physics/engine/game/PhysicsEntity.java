@@ -4,12 +4,13 @@ import org.pmw.tinylog.Logger;
 
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
+import com.project.physics.engine.math.Vector2f;
 import com.project.physics.engine.state.PongGameState;
 import com.project.physics.engine.state.State.Collision;
 
 public class PhysicsEntity extends Entity {
 
-    private float gravityAdder = 0.75f;
+    private Vector2f velocity = new Vector2f(0.0f, 250.0f);
 
     public PhysicsEntity(Color color, Texture texture, float x, float y, float speed) {
         super(color, texture, x, y, speed, 20, 20, 20, 40);
@@ -23,19 +24,38 @@ public class PhysicsEntity extends Entity {
         // Nothing to do here yet
     }
 
+    @Override
+    public void update(float delta) {
+        previousPosition = new Vector2f(position.x, position.y);
+        if (direction.length() != 0) {
+            direction = direction.normalize();
+            
+        }
+        velocity = velocity.add(direction.scale(speed));
+        Logger.info(velocity.y);
+        position = position.add(velocity.scale(delta));
+        
+        if (velocity.y > 0)
+            velocity = velocity.negate();
+
+        boundingBox.min.x = position.x;
+        boundingBox.min.y = position.y;
+        boundingBox.max.x = position.x + width;
+        boundingBox.max.y = position.y + height;
+    }
+
     public PongGameState.Collision checkBorderCollision(int gameWidth, int gameHeight) {
         if (position.y < 0) {
             position.y = 0;
             direction.y = -direction.y;
-            // TODO! : change this to an actual gravity thing later
-            changeSpeed(speed-70f);
-            Logger.info("bottom collision: "+speed);
+            if (velocity.y < -500f)
+                velocity = velocity.add(direction.scale(speed)).negate();
+            
             return Collision.COLLISION_BOTTOM;
         }
         if (position.y > gameHeight - this.height) {
             position.y = gameHeight - this.height;
             direction.y = -direction.y;
-            Logger.info("top collision: " + speed);
             return Collision.COLLISION_TOP;
         }
         return Collision.NO_COLLISION;
