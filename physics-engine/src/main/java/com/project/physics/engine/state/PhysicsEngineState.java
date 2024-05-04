@@ -49,8 +49,7 @@ public class PhysicsEngineState implements State {
 
         texture.bind();
         renderer.begin();
-        renderer.drawTest();
-        // triangle.render(renderer, alpha);
+        triangle.render(renderer, alpha);
         renderer.end();
     }
 
