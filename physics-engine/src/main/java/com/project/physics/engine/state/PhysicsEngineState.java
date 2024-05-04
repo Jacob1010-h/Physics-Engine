@@ -9,7 +9,7 @@ import org.lwjgl.system.MemoryStack;
 import com.project.physics.engine.game.PhysicsEntity;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.Renderer;
+import com.project.physics.engine.graphic.window.DynamicRenderer;
 
 /**
  *
@@ -17,7 +17,7 @@ import com.project.physics.engine.graphic.window.Renderer;
  */
 public class PhysicsEngineState implements State {
 
-    private Renderer renderer;
+    private DynamicRenderer renderer;
 
     private Texture texture;
     private PhysicsEntity triangle;
@@ -25,7 +25,8 @@ public class PhysicsEngineState implements State {
     private int gameWidth;
     private int gameHeight;
 
-    public PhysicsEngineState(Renderer renderer) {
+
+    public PhysicsEngineState(DynamicRenderer renderer) {
         this.renderer = renderer;
     
     }
@@ -38,7 +39,7 @@ public class PhysicsEngineState implements State {
     @Override
     public void update(float delta) {
         triangle.update(delta);
-
+        
         triangle.checkBorderCollision(gameWidth, gameHeight);
     }
 
@@ -48,7 +49,8 @@ public class PhysicsEngineState implements State {
 
         texture.bind();
         renderer.begin();
-        triangle.render(renderer, alpha);
+        renderer.drawTest();
+        // triangle.render(renderer, alpha);
         renderer.end();
     }
 
@@ -72,7 +74,6 @@ public class PhysicsEngineState implements State {
         float speed = 9.5f;
         
         triangle = new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f);
-
 
         gameWidth = width;
         gameHeight = height;

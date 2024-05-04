@@ -64,7 +64,7 @@ import com.project.physics.engine.text.Font;
  *
  * @author Heiko Brumme
  */
-public class Renderer {
+public class DynamicRenderer {
 
     private VertexArrayObject vao;
     private VertexBufferObject vbo;
@@ -90,7 +90,7 @@ public class Renderer {
         try {
             font = new Font(new FileInputStream("resources/Inconsolata.ttf"), 16);
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(Renderer.class.getName()).log(Level.CONFIG, null, ex);
+            Logger.getLogger(DynamicRenderer.class.getName()).log(Level.CONFIG, null, ex);
             font = new Font();
         }
         debugFont = new Font(12, false);

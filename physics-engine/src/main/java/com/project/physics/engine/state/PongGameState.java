@@ -33,7 +33,7 @@ import com.project.physics.engine.game.Ball;
 import com.project.physics.engine.game.Paddle;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.Renderer;
+import com.project.physics.engine.graphic.window.DynamicRenderer;
 
 /**
  * This class contains a simple game.
@@ -43,7 +43,7 @@ import com.project.physics.engine.graphic.window.Renderer;
 public class PongGameState implements State {
 
     private Texture texture;
-    private final Renderer renderer;
+    private final DynamicRenderer renderer;
 
     private Paddle player;
     private Paddle opponent;
@@ -54,7 +54,7 @@ public class PongGameState implements State {
     private int gameWidth;
     private int gameHeight;
 
-    public PongGameState(Renderer renderer) {
+    public PongGameState(DynamicRenderer renderer) {
         this.renderer = renderer;
     }
 
