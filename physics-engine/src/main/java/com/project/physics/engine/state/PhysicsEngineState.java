@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import org.lwjgl.system.MemoryStack;
 
 import com.project.physics.engine.game.PhysicsEntity;
+import com.project.physics.engine.game.PhysicsEntity.ElasticCollisionResults;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.graphic.window.DynamicRenderer;
@@ -44,7 +45,16 @@ public class PhysicsEngineState implements State {
             physicsEntity.update(delta);
             physicsEntity.checkBorderCollision(gameWidth, gameHeight);
             for (PhysicsEntity physicsEntity2 : physicsEntities) {
-                physicsEntity.hasCollided(physicsEntity2);
+                // check if the checked physics entity is equal to the current entity being looped
+                if (physicsEntity.getPosition().equals(physicsEntity2.getPosition()))
+                    continue;
+                
+                if (physicsEntity.hasCollided(physicsEntity2)) {
+                    ElasticCollisionResults results = physicsEntity.calculateCollisionVelocity(physicsEntity2);
+                    System.out.println(results.toString());
+                    physicsEntity.setVelocity(results.first());
+                    physicsEntity2.setVelocity(results.second());
+                }
             }
         }
     }
@@ -83,7 +93,7 @@ public class PhysicsEngineState implements State {
         for (int i = 0; i < 5; i++) {
             float x = (float) (Math.random() - 0.5f) * 30f;
             float y = (float) (Math.random() - 0.5f) * 30f;
-            physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f, new Vector2f(x, y)));
+            physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f, new Vector2f(x, y), 1));
         }
 
         gameWidth = width;
