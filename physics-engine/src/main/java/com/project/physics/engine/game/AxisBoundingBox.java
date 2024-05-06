@@ -54,23 +54,15 @@ public class AxisBoundingBox {
      * @return true if a collision was detected.
      */
     public boolean intersects(AxisBoundingBox other) {
-        if (this.max.x < other.min.x) {
+        if (this.max.x < other.min.x || this.min.x > other.max.x) {
             return false;
         }
 
-        if (this.max.y < other.min.y) {
+        if (this.max.y < other.min.y || this.min.y > other.max.y) {
             return false;
         }
 
-        if (this.min.x > other.max.x) {
-            return false;
-        }
-
-        if (this.min.y > other.max.y) {
-            return false;
-        }
-
-        // All tests failed, we have a intersection
+        // All tests passed, we have an intersection
         return true;
     }
 

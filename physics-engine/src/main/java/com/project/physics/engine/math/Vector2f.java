@@ -53,7 +53,7 @@ public class Vector2f {
         this.x = x;
         this.y = y;
     }
-
+    
     /**
      * Calculates the squared length of the vector.
      *
@@ -86,6 +86,10 @@ public class Vector2f {
         float x = Math.abs(this.x);
         float y = Math.abs(this.y);
         return new Vector2f(x, y);
+    }
+
+    public boolean equals(Vector2f other) {
+        return this.x == other.x && this.y == other.y;
     }
 
     /**
@@ -185,4 +189,8 @@ public class Vector2f {
         buffer.flip();
     }
 
+    @Override
+    public String toString() {
+        return String.format("(%.3f, %.3f)", x, y);
+    }
 }

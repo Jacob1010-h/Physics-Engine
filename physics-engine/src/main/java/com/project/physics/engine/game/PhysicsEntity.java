@@ -8,15 +8,18 @@ import com.project.physics.engine.state.State.Collision;
 
 public class PhysicsEntity extends Entity {
 
-    private Vector2f initVelocity;
+    private final Vector2f initVelocity;
     private Vector2f velocity;
 
+    private final float mass;
+
     // ? This class should be allowed to render multiple balls at once but wont when put into the physics engine?
-    public PhysicsEntity(Color color, Texture texture, float x, float y, float speed, Vector2f initVelocity) {
+    public PhysicsEntity(Color color, Texture texture, float x, float y, float speed, Vector2f initVelocity, float mass) {
         super(color, texture, x, y, speed, 20, 20, 20, 40);
 
         this.initVelocity = initVelocity;
         this.velocity = initVelocity;
+        this.mass = mass;
     }
 
     @Override
@@ -38,6 +41,10 @@ public class PhysicsEntity extends Entity {
         boundingBox.max.x = position.x + width;
         boundingBox.max.y = position.y + height;
 
+    }
+
+    public void setVelocity(Vector2f velocity) {
+        this.velocity = velocity;
     }
     
     private Vector2f applyDrag(Vector2f velocity) {
@@ -81,20 +88,33 @@ public class PhysicsEntity extends Entity {
     }
     
     public boolean hasCollided(PhysicsEntity otherPosition) {
-        if (boundingBox.intersects(otherPosition.getAABB())) {
-            System.out.println("INTERCEPTION");
-            return true;
-        }
-        
-        return false;
+        return boundingBox.intersects(otherPosition.getAABB());
     }
     
     // This calculates the speeds for two object in a perfectly elastic collision
-    public static Vector2f[] calculateCollisionVelocity(float m1, float m2, Vector2f v1Init, Vector2f v2Init) {
-        return new Vector2f[] {
-            v1Init.scale(((m1 - m2) / (m1 + m2))).add(v2Init.scale(((2 * m2) / (m1
-                        - m2)))),
-            v1Init.scale(((2 * m1) / (m1 + m2))).add(v2Init.scale(((m2 - m1) / (m1 + m2))))
-        };
+    public ElasticCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
+        Vector2f firstResult = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
+                .add(other.velocity.scale(2f).scale((((other.mass) / (this.mass
+                        + other.mass)))));
+
+        Vector2f secondResult = this.velocity.scale(2f).scale(((this.mass) / (this.mass + other.mass)))
+                .subtract((other.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))));
+
+        return new ElasticCollisionResults(firstResult, secondResult);
+    }
+    
+    public record ElasticCollisionResults(Vector2f first, Vector2f second) {
+        public ElasticCollisionResults() {
+            this(new Vector2f(), new Vector2f());
+        }
+
+        public ElasticCollisionResults(Vector2f[] results) {
+            this(results[0], results[1]);
+        }
+
+        @Override
+        public final String toString() {
+            return "First: "+first.toString()+", Second: "+second.toString();
+        }
     }
 }
