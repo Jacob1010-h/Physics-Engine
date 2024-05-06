@@ -121,6 +121,10 @@ public abstract class Entity {
         renderer.drawTextureRegion(texture, x, y, tx, ty, width, height, color);
     }
 
+    public Vector2f getPosition() {
+        return position;
+    }
+
     public float getX() {
         return position.x;
     }

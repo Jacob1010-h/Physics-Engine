@@ -32,15 +32,19 @@ import com.project.physics.engine.math.Vector2f;
  */
 public class AxisBoundingBox {
 
-    public Vector2f min, max;
-
-    public AxisBoundingBox(Entity entity) {
-        min = new Vector2f(entity.getX(), entity.getY());
+    public Vector2f min, max, center;
+    
+    public AxisBoundingBox(float x, float y, float width, float height) {
+        min = new Vector2f(x, y);
         max = new Vector2f(
-                entity.getX() + entity.getWidth(),
-                entity.getY() + entity.getHeight()
-        );
+                x + width,
+                y + height);
+        center = min.subtract(max).abs();
     }
+    public AxisBoundingBox(Entity entity) {
+        this(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+    }
+    
 
     /**
      * Checks if this AxisBoundingBox intersects another AxisBoundingBox.
