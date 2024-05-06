@@ -82,6 +82,12 @@ public class Vector2f {
         return divide(length);
     }
 
+    public Vector2f abs() {
+        float x = Math.abs(this.x);
+        float y = Math.abs(this.y);
+        return new Vector2f(x, y);
+    }
+
     /**
      * Adds this vector to another vector.
      *

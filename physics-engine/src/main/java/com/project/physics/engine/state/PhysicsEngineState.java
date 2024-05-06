@@ -1,6 +1,7 @@
 package com.project.physics.engine.state;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -10,6 +11,7 @@ import com.project.physics.engine.game.PhysicsEntity;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.graphic.window.DynamicRenderer;
+import com.project.physics.engine.math.Vector2f;
 
 /**
  *
@@ -20,7 +22,7 @@ public class PhysicsEngineState implements State {
     private DynamicRenderer renderer;
 
     private Texture texture;
-    private PhysicsEntity triangle;
+    private ArrayList<PhysicsEntity> physicsEntities = new ArrayList<>();
 
     private int gameWidth;
     private int gameHeight;
@@ -28,7 +30,7 @@ public class PhysicsEngineState implements State {
 
     public PhysicsEngineState(DynamicRenderer renderer) {
         this.renderer = renderer;
-    
+        
     }
     
     @Override
@@ -38,9 +40,13 @@ public class PhysicsEngineState implements State {
 
     @Override
     public void update(float delta) {
-        triangle.update(delta);
-        
-        triangle.checkBorderCollision(gameWidth, gameHeight);
+        for (PhysicsEntity physicsEntity : physicsEntities) {
+            physicsEntity.update(delta);
+            physicsEntity.checkBorderCollision(gameWidth, gameHeight);
+            for (PhysicsEntity physicsEntity2 : physicsEntities) {
+                physicsEntity.hasCollided(physicsEntity2);
+            }
+        }
     }
 
     @Override
@@ -49,7 +55,9 @@ public class PhysicsEngineState implements State {
 
         texture.bind();
         renderer.begin();
-        triangle.render(renderer, alpha);
+        for (PhysicsEntity physicsEntity : physicsEntities) {
+            physicsEntity.render(renderer, alpha);
+        }
         renderer.end();
     }
 
@@ -72,7 +80,11 @@ public class PhysicsEngineState implements State {
         /* Initialize game objects */
         float speed = 9.5f;
         
-        triangle = new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f);
+        for (int i = 0; i < 5; i++) {
+            float x = (float) (Math.random() - 0.5f) * 30f;
+            float y = (float) (Math.random() - 0.5f) * 30f;
+            physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f, new Vector2f(x, y)));
+        }
 
         gameWidth = width;
         gameHeight = height;

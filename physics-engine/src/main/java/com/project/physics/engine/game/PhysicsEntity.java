@@ -8,11 +8,15 @@ import com.project.physics.engine.state.State.Collision;
 
 public class PhysicsEntity extends Entity {
 
-    private final Vector2f initVelocity =  new Vector2f(5.0f, 2f);
-    private Vector2f velocity = initVelocity;
+    private Vector2f initVelocity;
+    private Vector2f velocity;
 
-    public PhysicsEntity(Color color, Texture texture, float x, float y, float speed) {
+    // ? This class should be allowed to render multiple balls at once but wont when put into the physics engine?
+    public PhysicsEntity(Color color, Texture texture, float x, float y, float speed, Vector2f initVelocity) {
         super(color, texture, x, y, speed, 20, 20, 20, 40);
+
+        this.initVelocity = initVelocity;
+        this.velocity = initVelocity;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class PhysicsEntity extends Entity {
     }
     
     private Vector2f applyDrag(Vector2f velocity) {
-        float dragCoeff = 0.5f;
+        float dragCoeff = 0.8f;
         float airDensity = 1.2f / 100f;
         Vector2f calculatedDrag = velocity.scale(velocity).scale(dragCoeff).scale(airDensity).divide(2f);
         if (velocity.y < 0) {
@@ -76,8 +80,17 @@ public class PhysicsEntity extends Entity {
         return Collision.NO_COLLISION;
     }
     
+    public boolean hasCollided(PhysicsEntity otherPosition) {
+        if (boundingBox.intersects(otherPosition.getAABB())) {
+            System.out.println("INTERCEPTION");
+            return true;
+        }
+        
+        return false;
+    }
+    
     // This calculates the speeds for two object in a perfectly elastic collision
-    private Vector2f[] calculateCollisionVelocity(float m1, float m2, Vector2f v1Init, Vector2f v2Init) {
+    public static Vector2f[] calculateCollisionVelocity(float m1, float m2, Vector2f v1Init, Vector2f v2Init) {
         return new Vector2f[] {
             v1Init.scale(((m1 - m2) / (m1 + m2))).add(v2Init.scale(((2 * m2) / (m1
                         - m2)))),
