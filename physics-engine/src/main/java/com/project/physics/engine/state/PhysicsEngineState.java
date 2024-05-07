@@ -52,6 +52,7 @@ public class PhysicsEngineState implements State {
                 if (physicsEntity.hasCollided(physicsEntity2)) {
                     ElasticCollisionResults results = physicsEntity.calculateCollisionVelocity(physicsEntity2);
                     System.out.println(results.toString());
+                    // https://www.tldraw.com/s/v2_c_vGQK3-onT9w3WJMoHR_uK?v=308%2C-578%2C1906%2C893&p=sTd95onUo2MEqWooknI6D
                     physicsEntity.setVelocity(results.first());
                     physicsEntity2.setVelocity(results.second());
                 }
