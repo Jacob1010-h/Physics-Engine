@@ -3,8 +3,6 @@ package com.project.physics.engine.game;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.math.Vector2f;
-import com.project.physics.engine.state.PongGameState;
-import com.project.physics.engine.state.State.Collision;
 
 public class PhysicsEntity extends CenteredEntity {
 
@@ -59,8 +57,7 @@ public class PhysicsEntity extends CenteredEntity {
         return velocity;
     }
 
-    public PongGameState.Collision checkBorderCollision(int gameWidth, int gameHeight) {
-        // Logger.info(velocity.y);
+    public void checkBorderCollision(int gameWidth, int gameHeight) {
         Vector2f center = new Vector2f(gameWidth / 2f, gameHeight / 2f);
         Vector2f distanceVector = center.subtract(position);
         float distance = distanceVector.length();
@@ -69,15 +66,12 @@ public class PhysicsEntity extends CenteredEntity {
             position = center.subtract(normal.scale(200f - radius));
             velocity = velocity.bounce(normal);
         }
-
-        return Collision.NO_COLLISION;
     }
     
     public boolean hasCollided(PhysicsEntity other) {
         return position.subtract(other.position).abs().length() < (this.radius + other.radius);
     }
     
-    // This calculates the speeds for two object in a perfectly elastic collision
     public ElasticCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
         Vector2f firstResult = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
                 .add(other.velocity.scale(2f).scale((((other.mass) / (this.mass
@@ -87,6 +81,10 @@ public class PhysicsEntity extends CenteredEntity {
                 .subtract((other.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))));
 
         return new ElasticCollisionResults(firstResult, secondResult);
+    }
+
+    public Vector2f getVelocity() {
+        return velocity;
     }
 
     public void setVelocity(Vector2f velocity) {

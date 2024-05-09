@@ -44,18 +44,8 @@ public abstract class CenteredEntity {
         input(null);
     }
 
-    /**
-     * Handles input of the entity.
-     *
-     * @param entity Can be used for the AI
-     */
     public abstract void input(CenteredEntity entity);
 
-    /**
-     * Updates the entity.
-     *
-     * @param delta Time difference in seconds
-     */
     public void update(float delta) {
         Vector2f displacement = position.subtract(previousPosition);
         previousPosition = new Vector2f(position.x, position.y);
@@ -63,15 +53,8 @@ public abstract class CenteredEntity {
         position = position.add(displacement).add(acceleration.scale(delta * delta));
 
         acceleration = new Vector2f();
-        // velocity = applyDrag(velocity);
     }
 
-    /**
-     * Renders the entity.
-     *
-     * @param renderer Renderer for batching
-     * @param alpha    Alpha value, needed for interpolation
-     */
     public void render(DynamicRenderer renderer, float alpha) {
         Vector2f interpolatedPosition = previousPosition.lerp(position, alpha);
         float x = interpolatedPosition.x;
