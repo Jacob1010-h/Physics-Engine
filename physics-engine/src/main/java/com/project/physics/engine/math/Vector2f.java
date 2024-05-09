@@ -72,6 +72,11 @@ public class Vector2f {
         return (float) Math.sqrt(lengthSquared());
     }
 
+    public Vector2f bounce(Vector2f normal) {
+        Vector2f temp = normal.scale(-2 * normal.dot(this));
+        return temp.add(this);
+    }
+
     /**
      * Normalizes the vector.
      *
@@ -192,5 +197,11 @@ public class Vector2f {
     @Override
     public String toString() {
         return String.format("(%.3f, %.3f)", x, y);
+    }
+
+    public Vector2f sqrt() {
+        double x = Math.sqrt(this.x);
+        double y = Math.sqrt(this.y);
+        return new Vector2f((float) x, (float) y);
     }
 }

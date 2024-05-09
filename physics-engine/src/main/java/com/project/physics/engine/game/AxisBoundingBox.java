@@ -41,6 +41,7 @@ public class AxisBoundingBox {
                 y + height);
         center = min.subtract(max).abs();
     }
+    
     public AxisBoundingBox(Entity entity) {
         this(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
     }
