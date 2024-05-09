@@ -8,7 +8,6 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import org.lwjgl.system.MemoryStack;
 
 import com.project.physics.engine.game.PhysicsEntity;
-import com.project.physics.engine.game.PhysicsEntity.ElasticCollisionResults;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.graphic.window.DynamicRenderer;
@@ -41,20 +40,37 @@ public class PhysicsEngineState implements State {
 
     @Override
     public void update(float delta) {
+        applyConstraints();
+        solveCollisions();
+        updateAllEntities(delta);
+    }
+
+    public void applyConstraints() {
+        for (PhysicsEntity physicsEntity : physicsEntities) {
+            physicsEntity.checkBorderCollision(gameWidth, gameHeight);
+        }
+    }
+
+    public void updateAllEntities(float delta) {
         for (PhysicsEntity physicsEntity : physicsEntities) {
             physicsEntity.update(delta);
-            physicsEntity.checkBorderCollision(gameWidth, gameHeight);
-            for (PhysicsEntity physicsEntity2 : physicsEntities) {
-                // check if the checked physics entity is equal to the current entity being looped
-                if (physicsEntity.getPosition().equals(physicsEntity2.getPosition()))
-                    continue;
-                
-                if (physicsEntity.hasCollided(physicsEntity2)) {
-                    ElasticCollisionResults results = physicsEntity.calculateCollisionVelocity(physicsEntity2);
-                    System.out.println(results.toString());
-                    // https://www.tldraw.com/s/v2_c_vGQK3-onT9w3WJMoHR_uK?v=308%2C-578%2C1906%2C893&p=sTd95onUo2MEqWooknI6D
-                    physicsEntity.setVelocity(results.first());
-                    physicsEntity2.setVelocity(results.second());
+        }
+    }
+    
+    public void solveCollisions() {
+        for (int i = 0; i < physicsEntities.size(); i++) {
+            PhysicsEntity entity1 = physicsEntities.get(i);
+            for (int j = i + 1; j < physicsEntities.size(); j++) {
+                PhysicsEntity entity2 = physicsEntities.get(j);
+
+                Vector2f distance = entity1.getPosition().subtract(entity2.getPosition()).abs();
+
+                float diameter = 20f;
+                if (distance.length() < diameter) {
+                    Vector2f normal = distance.divide(distance.length());
+                    float delta = diameter - distance.length();
+                    entity1.setPosition(entity1.getPosition().add(normal.scale(0.5f).scale(delta)));
+                    entity2.setPosition(entity2.getPosition().subtract(normal.scale(0.5f).scale(delta)));
                 }
             }
         }
@@ -87,15 +103,10 @@ public class PhysicsEngineState implements State {
 
         /* Load texture */
         texture = Texture.loadTexture("./physics-engine/src/main/resources/pong.png");
-
-        /* Initialize game objects */
-        float speed = 9.5f;
         
-        for (int i = 0; i < 5; i++) {
-            float x = (float) (Math.random() - 0.5f) * 30f;
-            float y = (float) (Math.random() - 0.5f) * 30f;
-            physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20) / 2f, (height - 20) / 2f, speed * 1.5f, new Vector2f(x, y), 1));
-        }
+        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20f) / 2f, (height - 20f) / 2f, 10, 1));
+        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20f) / 2.2f, (height - 20f) / 2f, 10, 1));
+        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20f) / 2.4f, (height - 20f) / 2f, 10, 1));
 
         gameWidth = width;
         gameHeight = height;

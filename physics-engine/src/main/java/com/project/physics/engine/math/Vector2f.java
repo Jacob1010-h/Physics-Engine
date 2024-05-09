@@ -193,4 +193,10 @@ public class Vector2f {
     public String toString() {
         return String.format("(%.3f, %.3f)", x, y);
     }
+
+    public Vector2f sqrt() {
+        double x = Math.sqrt(this.x);
+        double y = Math.sqrt(this.y);
+        return new Vector2f((float) x, (float) y);
+    }
 }
