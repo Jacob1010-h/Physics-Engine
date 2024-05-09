@@ -72,6 +72,11 @@ public class Vector2f {
         return (float) Math.sqrt(lengthSquared());
     }
 
+    public Vector2f bounce(Vector2f normal) {
+        Vector2f temp = normal.scale(-2 * normal.dot(this));
+        return temp.add(this);
+    }
+
     /**
      * Normalizes the vector.
      *

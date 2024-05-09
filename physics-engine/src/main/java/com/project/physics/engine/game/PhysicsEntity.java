@@ -33,10 +33,13 @@ public class PhysicsEntity extends CenteredEntity {
     public void update(float delta) {
         previousPosition = new Vector2f(position.x, position.y);
 
-        velocity = velocity.add(new Vector2f(0.0f, -9.80f).scale(delta));
+        velocity = applyGravity(new Vector2f(0.0f, -9.80f), delta);
+        velocity = applyDrag(velocity);
         position = position.add(velocity);
-        System.out.println(velocity);
-        // velocity = applyDrag(velocity);
+    }
+
+    private Vector2f applyGravity(Vector2f gravity, float delta) {
+        return velocity.add(gravity.scale(delta));
     }
     
     private Vector2f applyDrag(Vector2f velocity) {
@@ -64,9 +67,7 @@ public class PhysicsEntity extends CenteredEntity {
         if (distance > (200f - radius)) {
             Vector2f normal = distanceVector.divide(distance);
             position = center.subtract(normal.scale(200f - radius));
-            //TODO: compute the bounce angle velocity
-            velocity = (velocity.scale(velocity).add(new Vector2f(0f, -9.5f).scale(normal).scale(2))).sqrt();
-            
+            velocity = velocity.bounce(normal);
         }
 
         return Collision.NO_COLLISION;
@@ -77,16 +78,20 @@ public class PhysicsEntity extends CenteredEntity {
     }
     
     // This calculates the speeds for two object in a perfectly elastic collision
-    // public ElasticCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
-    //     Vector2f firstResult = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
-    //             .add(other.velocity.scale(2f).scale((((other.mass) / (this.mass
-    //                     + other.mass)))));
+    public ElasticCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
+        Vector2f firstResult = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
+                .add(other.velocity.scale(2f).scale((((other.mass) / (this.mass
+                        + other.mass)))));
 
-    //     Vector2f secondResult = this.velocity.scale(2f).scale(((this.mass) / (this.mass + other.mass)))
-    //             .subtract((other.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))));
+        Vector2f secondResult = this.velocity.scale(2f).scale(((this.mass) / (this.mass + other.mass)))
+                .subtract((other.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))));
 
-    //     return new ElasticCollisionResults(firstResult, secondResult);
-    // }
+        return new ElasticCollisionResults(firstResult, secondResult);
+    }
+
+    public void setVelocity(Vector2f velocity) {
+        this.velocity = velocity;
+    }
     
     public record ElasticCollisionResults(Vector2f first, Vector2f second) {
         public ElasticCollisionResults() {

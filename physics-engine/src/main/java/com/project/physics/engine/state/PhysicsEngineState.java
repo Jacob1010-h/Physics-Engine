@@ -11,7 +11,6 @@ import com.project.physics.engine.game.PhysicsEntity;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.graphic.window.DynamicRenderer;
-import com.project.physics.engine.math.Vector2f;
 
 /**
  *
@@ -56,22 +55,19 @@ public class PhysicsEngineState implements State {
             physicsEntity.update(delta);
         }
     }
-    
+
     public void solveCollisions() {
         for (int i = 0; i < physicsEntities.size(); i++) {
             PhysicsEntity entity1 = physicsEntities.get(i);
             for (int j = i + 1; j < physicsEntities.size(); j++) {
                 PhysicsEntity entity2 = physicsEntities.get(j);
 
-                Vector2f distance = entity1.getPosition().subtract(entity2.getPosition()).abs();
+                if (!entity1.hasCollided(entity2))
+                    continue;
 
-                float diameter = 20f;
-                if (distance.length() < diameter) {
-                    Vector2f normal = distance.divide(distance.length());
-                    float delta = diameter - distance.length();
-                    entity1.setPosition(entity1.getPosition().add(normal.scale(0.5f).scale(delta)));
-                    entity2.setPosition(entity2.getPosition().subtract(normal.scale(0.5f).scale(delta)));
-                }
+                PhysicsEntity.ElasticCollisionResults results = entity1.calculateCollisionVelocity(entity2);
+                entity1.setVelocity(results.first());
+                entity2.setVelocity(results.second());
             }
         }
     }
