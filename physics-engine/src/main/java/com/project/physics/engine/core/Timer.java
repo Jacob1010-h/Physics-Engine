@@ -33,34 +33,13 @@ import static org.lwjgl.glfw.GLFW.glfwGetTime;
  */
 public class Timer {
 
-    /**
-     * System time since last loop.
-     */
-    private double lastLoopTime;
-    /**
-     * Used for FPS and UPS calculation.
-     */
-    private float timeCount;
-    /**
-     * Frames per second.
-     */
-    private int fps;
-    /**
-     * Counter for the FPS calculation.
-     */
-    private int fpsCount;
-    /**
-     * Updates per second.
-     */
-    private int ups;
-    /**
-     * Counter for the UPS calculation.
-     */
-    private int upsCount;
+    private static double lastLoopTime;
+    private static float timeCount;
+    private static int fps;
+    private static int fpsCount;
+    private static int ups;
+    private static int upsCount;
 
-    /**
-     * Initializes the timer.
-     */
     public void init() {
         lastLoopTime = getTime();
     }

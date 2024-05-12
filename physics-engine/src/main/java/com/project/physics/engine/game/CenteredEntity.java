@@ -19,12 +19,12 @@ public abstract class CenteredEntity {
 
     protected final int radius;
 
-    protected final int tx;
-    protected final int ty;
+    protected final int textureX;
+    protected final int textureY;
 
-    public CenteredEntity(Color color, Texture texture, float x, float y, int radius, int tx, int ty) {
-        previousPosition = new Vector2f(x + radius, y + radius);
-        position = new Vector2f(x + radius, y + radius);
+    public CenteredEntity(Color color, Texture texture, float startX, float startY, int radius, int textureX, int textureY) {
+        previousPosition = new Vector2f(startX + radius, startY + radius);
+        position = new Vector2f(startX + radius, startY + radius);
 
         direction = new Vector2f();
 
@@ -33,8 +33,8 @@ public abstract class CenteredEntity {
 
         this.radius = radius;
 
-        this.tx = tx;
-        this.ty = ty;
+        this.textureX = textureX;
+        this.textureY = textureY;
     }
 
     /**
@@ -59,7 +59,7 @@ public abstract class CenteredEntity {
         Vector2f interpolatedPosition = previousPosition.lerp(position, alpha);
         float x = interpolatedPosition.x;
         float y = interpolatedPosition.y;
-        renderer.drawTextureRegion(texture, x-radius, y-radius, tx, ty, radius * 2f, radius * 2f, color);
+        renderer.drawTextureRegion(texture, x-radius, y-radius, textureX, textureY, radius * 2f, radius * 2f, color);
     }
 
     public Vector2f getPosition() {

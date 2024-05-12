@@ -13,9 +13,9 @@ public class PhysicsEntity extends CenteredEntity {
     private final float mass;
 
     // ? This class should be allowed to render multiple balls at once but wont when put into the physics engine?
-    public PhysicsEntity(Color color, Texture texture, float x, float y, int radius,
+    public PhysicsEntity(Color color, Texture texture, float startX, float startY, int radius,
             float mass) {
-        super(color, texture, x, y, radius, 20, 40);
+        super(color, texture, startX, startY, radius, 20, 40);
 
         this.mass = mass;
 

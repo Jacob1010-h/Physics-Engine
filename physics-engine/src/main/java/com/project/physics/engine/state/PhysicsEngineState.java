@@ -18,10 +18,10 @@ import com.project.physics.engine.graphic.window.DynamicRenderer;
  */
 public class PhysicsEngineState implements State {
 
-    private DynamicRenderer renderer;
+    private final DynamicRenderer renderer;
 
     private Texture texture;
-    private ArrayList<PhysicsEntity> physicsEntities = new ArrayList<>();
+    private final ArrayList<PhysicsEntity> physicsEntities = new ArrayList<>();
 
     private int gameWidth;
     private int gameHeight;
@@ -44,19 +44,19 @@ public class PhysicsEngineState implements State {
         updateAllEntities(delta);
     }
 
-    public void applyConstraints() {
+    private void applyConstraints() {
         for (PhysicsEntity physicsEntity : physicsEntities) {
             physicsEntity.checkBorderCollision(gameWidth, gameHeight);
         }
     }
 
-    public void updateAllEntities(float delta) {
+    private void updateAllEntities(float delta) {
         for (PhysicsEntity physicsEntity : physicsEntities) {
             physicsEntity.update(delta);
         }
     }
 
-    public void solveCollisions() {
+    private void solveCollisions() {
         for (int i = 0; i < physicsEntities.size(); i++) {
             PhysicsEntity entity1 = physicsEntities.get(i);
             for (int j = i + 1; j < physicsEntities.size(); j++) {
@@ -87,25 +87,23 @@ public class PhysicsEngineState implements State {
     @Override
     public void enter() {
         /* Get width and height of framebuffer */
-        int width, height;
         try (MemoryStack stack = MemoryStack.stackPush()) {
             long window = GLFW.glfwGetCurrentContext();
             IntBuffer widthBuffer = stack.mallocInt(1);
             IntBuffer heightBuffer = stack.mallocInt(1);
             GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
-            width = widthBuffer.get();
-            height = heightBuffer.get();
+
+            /* Set the game width and height */
+            gameWidth = widthBuffer.get();
+            gameHeight = heightBuffer.get();
         }
 
         /* Load texture */
         texture = Texture.loadTexture("./physics-engine/src/main/resources/pong.png");
-        
-        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20f) / 2f, (height - 20f) / 2f, 10, 1));
-        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20f) / 2.2f, (height - 20f) / 2f, 10, 1));
-        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (width - 20f) / 2.4f, (height - 20f) / 2f, 10, 1));
 
-        gameWidth = width;
-        gameHeight = height;
+        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (gameWidth - 20f) / 2f, (gameHeight - 20f) / 2f, 10, 1));
+        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (gameWidth - 20f) / 2.5f, (gameHeight - 20f) / 2f, 10, 1));
+        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (gameWidth - 20f) / 3.4f, (gameHeight - 20f) / 2f, 10, 1));
 
         /* Set clear color to gray */
         glClearColor(0.5f, 0.5f, 0.5f, 1f);
