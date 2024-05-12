@@ -34,11 +34,10 @@ import org.lwjgl.opengl.GL;
 
 import com.project.physics.engine.graphic.window.DynamicRenderer;
 import com.project.physics.engine.graphic.window.Window;
-import com.project.physics.engine.state.ExampleState;
 import com.project.physics.engine.state.PhysicsEngineState;
 import com.project.physics.engine.state.PongGameState;
+import com.project.physics.engine.state.SpinningTriangleState;
 import com.project.physics.engine.state.StateMachine;
-import com.project.physics.engine.state.TextureState;
 
 /**
  * The game class just initializes the game and starts the game loop. After
@@ -149,13 +148,11 @@ public abstract class Game {
      * Initializes the states.
      * @param gameType
      */
-    public void initStates(GameType gameType) {
-        state.add("example", new ExampleState());
-        state.add("texture", new TextureState());
-        
+    public void initStates(GameType gameType) {        
         switch (gameType) {
             case PHYSICS -> state.add("game", new PhysicsEngineState(renderer));
             case PONG -> state.add("game", new PongGameState(renderer));
+            case TRIANGLE -> state.add("game", new SpinningTriangleState());
         }
         state.change("game");
     }

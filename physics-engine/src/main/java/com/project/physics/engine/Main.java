@@ -41,7 +41,7 @@ public class Main {
      */
     public static void main(String[] args) {
         Game game = new FixedTimestepGame();
-        game.start(GameType.PHYSICS);
+        game.start(GameType.TRIANGLE);
     }
 
 }

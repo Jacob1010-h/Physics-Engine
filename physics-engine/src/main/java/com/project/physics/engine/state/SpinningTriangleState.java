@@ -48,7 +48,7 @@ import com.project.physics.engine.math.Matrix4f;
  *
  * @author Heiko Brumme
  */
-public class ExampleState implements State {
+public class SpinningTriangleState implements State {
 
     private final CharSequence vertexSource
                                = "#version 150 core\n"
