@@ -129,7 +129,7 @@ public abstract class Game {
         }
 
         /* Create GLFW window */
-        window = new Window(640, 480, "Simple Game - Pong", true);
+        window = new Window(640, 480, "Simple Game - "+gameType.toString(), true);
 
         /* Initialize timer */
         timer.init();
