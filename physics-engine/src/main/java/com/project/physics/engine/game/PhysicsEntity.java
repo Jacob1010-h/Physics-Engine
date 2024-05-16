@@ -7,12 +7,13 @@ import com.project.physics.engine.math.Vector2f;
 public class PhysicsEntity extends CenteredEntity {
 
     private Vector2f velocity = new Vector2f();
-    
+
     private final int radius;
 
     private final float mass;
 
-    // ? This class should be allowed to render multiple balls at once but wont when put into the physics engine?
+    // ? This class should be allowed to render multiple balls at once but wont when
+    // put into the physics engine?
     public PhysicsEntity(Color color, Texture texture, float startX, float startY, int radius,
             float mass) {
         super(color, texture, startX, startY, radius, 20, 40);
@@ -24,12 +25,15 @@ public class PhysicsEntity extends CenteredEntity {
 
     @Override
     public void input(CenteredEntity entity) {
-        // Nothing to do here yet 
+        // Nothing to do here yet
     }
 
     @Override
     public void update(float delta) {
         previousPosition = new Vector2f(position.x, position.y);
+
+        if (!velocity.partIsZero())
+            velocity.normalize();
 
         velocity = applyGravity(new Vector2f(0.0f, -9.80f), delta);
         velocity = applyDrag(velocity);
@@ -39,7 +43,7 @@ public class PhysicsEntity extends CenteredEntity {
     private Vector2f applyGravity(Vector2f gravity, float delta) {
         return velocity.add(gravity.scale(delta));
     }
-    
+
     private Vector2f applyDrag(Vector2f velocity) {
         float dragCoeff = 0.8f;
         float airDensity = 1.2f / 100f;
@@ -67,20 +71,31 @@ public class PhysicsEntity extends CenteredEntity {
             velocity = velocity.bounce(normal);
         }
     }
-    
+
     public boolean hasCollided(PhysicsEntity other) {
         return position.subtract(other.position).abs().length() < (this.radius + other.radius);
     }
-    
+
     public ElasticCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
-        Vector2f firstResult = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
+        Vector2f distance = this.position.subtract(other.position);
+        Vector2f normal = distance.divide(distance.length());
+
+        float minDistance = this.radius + other.radius;
+
+        float massRatio1 = this.mass / other.mass;
+        float massRatio2 = other.mass / this.mass;
+        float delta = 0.5f * 0.75f * (distance.length() - minDistance);
+
+        Vector2f firstPosition = this.position.subtract(normal.scale(massRatio2 * delta));
+        Vector2f secondPosition = other.position.add(normal.scale(massRatio1 * delta));
+        
+        Vector2f firstVelocity = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
                 .add(other.velocity.scale(2f).scale((((other.mass) / (this.mass
                         + other.mass)))));
-
-        Vector2f secondResult = this.velocity.scale(2f).scale(((this.mass) / (this.mass + other.mass)))
+        Vector2f secondVelocity = this.velocity.scale(2f).scale(((this.mass) / (this.mass + other.mass)))
                 .subtract((other.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))));
 
-        return new ElasticCollisionResults(firstResult, secondResult);
+        return new ElasticCollisionResults(firstPosition, firstVelocity, secondPosition, secondVelocity);
     }
 
     public Vector2f getVelocity() {
@@ -90,24 +105,25 @@ public class PhysicsEntity extends CenteredEntity {
     public void setVelocity(Vector2f velocity) {
         this.velocity = velocity;
     }
-    
-    public record ElasticCollisionResults(Vector2f first, Vector2f second) {
+
+    public record ElasticCollisionResults(Vector2f firstPosition, Vector2f firstVelocity, Vector2f secondPosition,
+            Vector2f secondVelocity) {
         public ElasticCollisionResults() {
-            this(new Vector2f(), new Vector2f());
+            this(new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f());
         }
 
         public ElasticCollisionResults(Vector2f[] results) {
-            this(results[0], results[1]);
+            this(results[0], results[1], results[2], results[3]);
         }
 
         @Override
         public final String toString() {
-            return "First: "+first.toString()+", Second: "+second.toString();
+            return "First: " + firstPosition.toString() + ", Second: " + secondPosition.toString();
         }
     }
 
     public void setPosition(Vector2f position) {
         this.position = position;
     }
-    
+
 }

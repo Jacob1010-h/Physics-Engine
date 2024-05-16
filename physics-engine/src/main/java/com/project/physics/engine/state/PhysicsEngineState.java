@@ -66,8 +66,15 @@ public class PhysicsEngineState implements State {
                     continue;
 
                 PhysicsEntity.ElasticCollisionResults results = entity1.calculateCollisionVelocity(entity2);
-                entity1.setVelocity(results.first());
-                entity2.setVelocity(results.second());
+                
+                /* Limit the position of the spheres */
+                entity1.setPosition(results.firstPosition());
+                entity2.setPosition(results.secondPosition());
+                
+                /* Apply the bounce force of the spheres */
+                entity1.setVelocity(results.firstVelocity());
+                entity2.setVelocity(results.secondVelocity());
+                
             }
         }
     }
