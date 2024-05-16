@@ -10,8 +10,6 @@ public abstract class CenteredEntity {
     protected Vector2f previousPosition;
     protected Vector2f position;
 
-    protected Vector2f direction;
-
     private Vector2f acceleration = new Vector2f();
 
     protected final Color color;
@@ -25,8 +23,6 @@ public abstract class CenteredEntity {
     public CenteredEntity(Color color, Texture texture, float startX, float startY, int radius, int textureX, int textureY) {
         previousPosition = new Vector2f(startX + radius, startY + radius);
         position = new Vector2f(startX + radius, startY + radius);
-
-        direction = new Vector2f();
 
         this.color = color;
         this.texture = texture;
