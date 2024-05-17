@@ -204,8 +204,4 @@ public class Vector2f {
         double y = Math.sqrt(this.y);
         return new Vector2f((float) x, (float) y);
     }
-
-    public boolean partIsZero() {
-        return this.x == 0 || this.y == 0;
-    }
 }
