@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
@@ -16,10 +15,12 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import org.lwjgl.system.MemoryStack;
 
+import com.project.physics.engine.game.CircleConstraint;
 import com.project.physics.engine.game.PhysicsEntity;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.graphic.window.DynamicRenderer;
+import com.project.physics.engine.math.Vector2f;
 
 /**
  *
@@ -28,16 +29,12 @@ import com.project.physics.engine.graphic.window.DynamicRenderer;
 public class PhysicsEngineState implements State {
 
     private final DynamicRenderer renderer;
-
     private Texture texture;
     private final ArrayList<PhysicsEntity> physicsEntities = new ArrayList<>();
-
     private int gameWidth;
     private int gameHeight;
-
-    GLFWMouseButtonCallback mouseCallback;
-
-    float deltaStep = 10f;
+    private GLFWMouseButtonCallback mouseCallback;
+    private final float deltaStep = 8f;
 
     public PhysicsEngineState(DynamicRenderer renderer) {
         this.renderer = renderer;
@@ -53,6 +50,7 @@ public class PhysicsEngineState implements State {
         float mouseX = (float) x.get();
         float mouseY = (float) y.get();
 
+        /* Create binding listener for a single button click */
         glfwSetMouseButtonCallback(window, mouseCallback = new GLFWMouseButtonCallback() {
             @Override
             public void invoke(long window, int button, int action, int mods) {
@@ -64,6 +62,7 @@ public class PhysicsEngineState implements State {
             }
         });
 
+        /* Checks every frame if [SPACE] is pressed */
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
             makePhysicsEntityAtMouse(mouseX, mouseY);
         }
@@ -72,7 +71,7 @@ public class PhysicsEngineState implements State {
     // Using this method too much within a short amount of time will result in the texture never being spawned
     private void makePhysicsEntityAtMouse(float mouseX, float mouseY) {
         physicsEntities
-                .add(new PhysicsEntity(Color.GREEN, texture, mouseX - 10, -mouseY + gameHeight - 10, 10, 1));
+                .add(new PhysicsEntity(Color.GREEN, texture, mouseX - 10, -mouseY + gameHeight - 10, 10, new CircleConstraint(new Vector2f(gameWidth / 2f, gameHeight / 2f), 200f)));
     }
 
     @Override
