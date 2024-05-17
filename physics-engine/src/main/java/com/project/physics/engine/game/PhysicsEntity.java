@@ -6,19 +6,13 @@ import com.project.physics.engine.math.Vector2f;
 
 public class PhysicsEntity extends CenteredEntity {
 
-    private Vector2f velocity = new Vector2f();
-
     private final int radius;
-
-    private final float mass;
 
     // ? This class should be allowed to render multiple balls at once but wont when
     // put into the physics engine?
     public PhysicsEntity(Color color, Texture texture, float startX, float startY, int radius,
             float mass) {
         super(color, texture, startX, startY, radius, 20, 40);
-
-        this.mass = mass;
 
         this.radius = radius;
     }
@@ -30,35 +24,11 @@ public class PhysicsEntity extends CenteredEntity {
 
     @Override
     public void update(float delta) {
-        previousPosition = new Vector2f(position.x, position.y);
+        Vector2f difference = position.subtract(previousPosition);
 
-        if (!velocity.partIsZero())
-            velocity.normalize();
-
-        velocity = applyGravity(new Vector2f(0.0f, -9.80f), delta);
-        velocity = applyDrag(velocity);
-        position = position.add(velocity);
-    }
-
-    private Vector2f applyGravity(Vector2f gravity, float delta) {
-        return velocity.add(gravity.scale(delta));
-    }
-
-    private Vector2f applyDrag(Vector2f velocity) {
-        float dragCoeff = 0.8f;
-        float airDensity = 1.2f / 100f;
-        Vector2f calculatedDrag = velocity.scale(velocity).scale(dragCoeff).scale(airDensity).divide(2f);
-        if (velocity.y < 0) {
-            velocity = new Vector2f(velocity.x, velocity.y + calculatedDrag.y);
-        } else if (velocity.y > 0) {
-            velocity = new Vector2f(velocity.x, velocity.y - calculatedDrag.y);
-        }
-        if (velocity.x < 0) {
-            velocity = new Vector2f(velocity.x + calculatedDrag.x, velocity.y);
-        } else if (velocity.x > 0) {
-            velocity = new Vector2f(velocity.x - calculatedDrag.x, velocity.y);
-        }
-        return velocity;
+        previousPosition = position;
+        
+        position = position.add(difference).add(new Vector2f(0.0f, -150f).scale(delta*delta));
     }
 
     public void checkBorderCollision(int gameWidth, int gameHeight) {
@@ -68,7 +38,6 @@ public class PhysicsEntity extends CenteredEntity {
         if (distance > (200f - radius)) {
             Vector2f normal = distanceVector.divide(distance);
             position = center.subtract(normal.scale(200f - radius));
-            velocity = velocity.bounce(normal);
         }
     }
 
@@ -76,49 +45,37 @@ public class PhysicsEntity extends CenteredEntity {
         return position.subtract(other.position).abs().length() < (this.radius + other.radius);
     }
 
-    public ElasticCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
+    public PhysicalCollisionResults calculateCollisionVelocity(PhysicsEntity other) {
         Vector2f distance = this.position.subtract(other.position);
         Vector2f normal = distance.divide(distance.length());
 
         float minDistance = this.radius + other.radius;
 
-        float massRatio1 = this.mass / other.mass;
-        float massRatio2 = other.mass / this.mass;
+        float massRatio1 = this.radius / (float) (this.radius + other.radius);
+        float massRatio2 = other.radius / (float) (this.radius + other.radius);
         float delta = 0.5f * 0.75f * (distance.length() - minDistance);
 
-        Vector2f firstPosition = this.position.subtract(normal.scale(massRatio2 * delta));
-        Vector2f secondPosition = other.position.add(normal.scale(massRatio1 * delta));
-        
-        Vector2f firstVelocity = this.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))
-                .add(other.velocity.scale(2f).scale((((other.mass) / (this.mass
-                        + other.mass)))));
-        Vector2f secondVelocity = this.velocity.scale(2f).scale(((this.mass) / (this.mass + other.mass)))
-                .subtract((other.velocity.scale(((this.mass - other.mass) / (this.mass + other.mass)))));
+        Vector2f first = this.position.subtract(normal.scale(massRatio2 * delta));
+        Vector2f second = other.position.add(normal.scale(massRatio1 * delta));
 
-        return new ElasticCollisionResults(firstPosition, firstVelocity, secondPosition, secondVelocity);
+        return new PhysicalCollisionResults(first, second);
     }
 
-    public Vector2f getVelocity() {
-        return velocity;
-    }
-
-    public void setVelocity(Vector2f velocity) {
-        this.velocity = velocity;
-    }
-
-    public record ElasticCollisionResults(Vector2f firstPosition, Vector2f firstVelocity, Vector2f secondPosition,
-            Vector2f secondVelocity) {
-        public ElasticCollisionResults() {
-            this(new Vector2f(), new Vector2f(), new Vector2f(), new Vector2f());
+    public record PhysicalCollisionResults(Vector2f first, Vector2f second) {
+        public PhysicalCollisionResults() {
+            this(new Vector2f(), new Vector2f());
         }
 
-        public ElasticCollisionResults(Vector2f[] results) {
-            this(results[0], results[1], results[2], results[3]);
+        public PhysicalCollisionResults(Vector2f[] results) {
+            this(results[0], results[1]);
+            if (results.length != 2) {
+                throw new IllegalArgumentException("ElasticCollision Vector Array length must be 2");
+            }
         }
 
         @Override
         public final String toString() {
-            return "First: " + firstPosition.toString() + ", Second: " + secondPosition.toString();
+            return "First: " + first.toString() + ", Second: " + second.toString();
         }
     }
 
