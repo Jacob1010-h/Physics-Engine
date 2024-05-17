@@ -1,9 +1,18 @@
 package com.project.physics.engine.state;
 
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import org.lwjgl.system.MemoryStack;
 
@@ -26,55 +35,68 @@ public class PhysicsEngineState implements State {
     private int gameWidth;
     private int gameHeight;
 
+    GLFWMouseButtonCallback mouseCallback;
+
+    float deltaStep = 10f;
 
     public PhysicsEngineState(DynamicRenderer renderer) {
         this.renderer = renderer;
-        
     }
     
     @Override
     public void input() {
-        // There is no input for this yet :))
+        long window = GLFW.glfwGetCurrentContext();
+
+        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+        glfwGetCursorPos(window, x, y);
+        float mouseX = (float) x.get();
+        float mouseY = (float) y.get();
+
+        glfwSetMouseButtonCallback(window, mouseCallback = new GLFWMouseButtonCallback() {
+            @Override
+            public void invoke(long window, int button, int action, int mods) {
+                switch (action) {
+                    case GLFW_PRESS -> {
+                        makePhysicsEntityAtMouse(mouseX, mouseY);
+                    }
+                }
+            }
+        });
+
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            makePhysicsEntityAtMouse(mouseX, mouseY);
+        }
+    }
+
+    // Using this method too much within a short amount of time will result in the texture never being spawned
+    private void makePhysicsEntityAtMouse(float mouseX, float mouseY) {
+        physicsEntities
+                .add(new PhysicsEntity(Color.GREEN, texture, mouseX - 10, -mouseY + gameHeight - 10, 10, 1));
     }
 
     @Override
     public void update(float delta) {
-        applyConstraints();
-        solveCollisions();
-        updateAllEntities(delta);
-    }
+        for (int i = 0; i < (int) deltaStep; i++) {
+            for (int j = 0; j < physicsEntities.size(); j++) {
+                PhysicsEntity entity1 = physicsEntities.get(j);
 
-    private void applyConstraints() {
-        for (PhysicsEntity physicsEntity : physicsEntities) {
-            physicsEntity.checkBorderCollision(gameWidth, gameHeight);
-        }
-    }
+                /* Check the boarder for any collisions */
+                entity1.checkBorderCollision(gameWidth, gameHeight);
 
-    private void updateAllEntities(float delta) {
-        for (PhysicsEntity physicsEntity : physicsEntities) {
-            physicsEntity.update(delta);
-        }
-    }
+                /* Check the entities in the area for any collisions with eachother */
+                for (int k = j + 1; k < physicsEntities.size(); k++) {
+                    PhysicsEntity entity2 = physicsEntities.get(k);
+                    if (!entity1.hasCollided(entity2))
+                        continue;
+                    PhysicsEntity.PhysicalCollisionResults results = entity1.calculateCollisionVelocity(entity2);
+                    /* Limit the position of the spheres */
+                    entity1.setPosition(results.first());
+                    entity2.setPosition(results.second());
+                }
 
-    private void solveCollisions() {
-        for (int i = 0; i < physicsEntities.size(); i++) {
-            PhysicsEntity entity1 = physicsEntities.get(i);
-            for (int j = i + 1; j < physicsEntities.size(); j++) {
-                PhysicsEntity entity2 = physicsEntities.get(j);
-
-                if (!entity1.hasCollided(entity2))
-                    continue;
-
-                PhysicsEntity.ElasticCollisionResults results = entity1.calculateCollisionVelocity(entity2);
-                
-                /* Limit the position of the spheres */
-                entity1.setPosition(results.firstPosition());
-                entity2.setPosition(results.secondPosition());
-                
-                /* Apply the bounce force of the spheres */
-                entity1.setVelocity(results.firstVelocity());
-                entity2.setVelocity(results.secondVelocity());
-                
+                /*Update the entities to complete the loop */
+                entity1.update(delta/deltaStep);
             }
         }
     }
@@ -108,16 +130,13 @@ public class PhysicsEngineState implements State {
         /* Load texture */
         texture = Texture.loadTexture("./physics-engine/src/main/resources/pong.png");
 
-        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (gameWidth - 20f) / 2f, (gameHeight - 20f) / 2f, 10, 1));
-        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (gameWidth - 20f) / 2.5f, (gameHeight - 20f) / 2f, 10, 1));
-        physicsEntities.add(new PhysicsEntity(Color.GREEN, texture, (gameWidth - 20f) / 3.4f, (gameHeight - 20f) / 2f, 10, 1));
-
         /* Set clear color to gray */
         glClearColor(0.5f, 0.5f, 0.5f, 1f);
     }
 
     @Override
     public void exit() {
+        mouseCallback.free();
         texture.delete();
     }
     
