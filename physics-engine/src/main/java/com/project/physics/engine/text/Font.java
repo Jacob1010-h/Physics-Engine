@@ -41,9 +41,9 @@ import java.util.Map;
 
 import org.lwjgl.system.MemoryUtil;
 
+import com.project.physics.engine.graphic.DynamicCamera;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicCamera;
 
 /**
  * This class contains a font texture for drawing text.

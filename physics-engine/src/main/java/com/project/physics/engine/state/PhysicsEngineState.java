@@ -17,9 +17,9 @@ import org.lwjgl.system.MemoryStack;
 
 import com.project.physics.engine.game.CircleConstraint;
 import com.project.physics.engine.game.PhysicsEntity;
+import com.project.physics.engine.graphic.DynamicCamera;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicCamera;
 import com.project.physics.engine.math.Vector2f;
 
 /**
