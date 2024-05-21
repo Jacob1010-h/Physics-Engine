@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.project.physics.engine.graphic.window;
+package com.project.physics.engine.graphic;
 
 import java.awt.FontFormatException;
 import java.io.FileInputStream;
@@ -50,8 +50,6 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import com.project.physics.engine.core.Game;
-import com.project.physics.engine.graphic.VertexArrayObject;
-import com.project.physics.engine.graphic.VertexBufferObject;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Shader;
 import com.project.physics.engine.graphic.shader.ShaderProgram;

@@ -1,8 +1,8 @@
 package com.project.physics.engine.game;
 
+import com.project.physics.engine.graphic.DynamicCamera;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicCamera;
 import com.project.physics.engine.math.Vector2f;
 
 /**

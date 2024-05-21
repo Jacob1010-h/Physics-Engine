@@ -32,8 +32,8 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import com.project.physics.engine.graphic.window.DynamicCamera;
-import com.project.physics.engine.graphic.window.Window;
+import com.project.physics.engine.graphic.DynamicCamera;
+import com.project.physics.engine.graphic.Window;
 import com.project.physics.engine.state.PhysicsEngineState;
 import com.project.physics.engine.state.PongGameState;
 import com.project.physics.engine.state.SpinningTriangleState;
