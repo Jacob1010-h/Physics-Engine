@@ -105,14 +105,14 @@ public class ShaderProgram {
     }
 
     /**
-     * Gets the location of an attribute variable with specified name.
+     * Gets the location of an attribute variable with specified dataLocation.
      *
-     * @param name Attribute name
+     * @param dataLocation Attribute dataLocation
      *
      * @return Location of the attribute
      */
-    public int getAttributeLocation(CharSequence name) {
-        return glGetAttribLocation(id, name);
+    public int getAttributeLocation(ShaderLocations dataLocation) {
+        return glGetAttribLocation(id, dataLocation.toString());
     }
 
     /**
@@ -154,8 +154,8 @@ public class ShaderProgram {
      *
      * @return Location of the uniform
      */
-    public int getUniformLocation(CharSequence name) {
-        return glGetUniformLocation(id, name);
+    public int getUniformLocation(ShaderLocations name) {
+        return glGetUniformLocation(id, name.toString());
     }
 
     /**
@@ -276,4 +276,13 @@ public class ShaderProgram {
         glDeleteProgram(id);
     }
 
+    public enum ShaderLocations {
+        TEX_IMAGE,
+        MODEL,
+        VIEW,
+        PROJECTION,
+        POSITION,
+        COLOR,
+        TEX_COORD;
+    }
 }
