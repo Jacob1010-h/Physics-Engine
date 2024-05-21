@@ -23,6 +23,8 @@
  */
 package com.project.physics.engine.core;
 
+import static org.lwjgl.opengl.GL11.glViewport;
+
 /**
  * This class contains the implementation for a variable timestep game loop.
  *
@@ -38,6 +40,11 @@ public class VariableTimestepGame extends Game {
             /* Check if game should close */
             if (window.isClosing()) {
                 running = false;
+            }
+
+            if (window.hasResized()) {
+                renderer.setProjection(window.getWidth(), window.getHeight());
+                glViewport(0, 0, window.getWidth(), window.getHeight());
             }
 
             /* Get delta time */
