@@ -31,7 +31,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
@@ -44,6 +43,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
@@ -52,6 +52,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -63,20 +64,13 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class Window {
 
-    /**
-     * Stores the window handle.
-     */
     private final long id;
-
-    /**
-     * Key callback for the window.
-     */
     private final GLFWKeyCallback keyCallback;
-
-    /**
-     * Shows if vsync is enabled.
-     */
     private boolean vsync;
+
+    private int width, height;
+    private boolean hasResized;
+    private GLFWWindowSizeCallback windowSizeCallback;
 
     /**
      * Creates a GLFW window and its OpenGL context with the specified width,
@@ -88,7 +82,11 @@ public class Window {
      * @param vsync  Set to true, if you want v-sync
      */
     public Window(int width, int height, CharSequence title, boolean vsync) {
+        this.width = width;
+        this.height = height;
         this.vsync = vsync;
+
+        hasResized = false;
 
         /* Creating a temporary window for getting the available OpenGL version */
         glfwDefaultWindowHints();
@@ -113,9 +111,9 @@ public class Window {
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         } else {
             throw new RuntimeException("Neither OpenGL 3.2 nor OpenGL 2.1 is "
-                                       + "supported, you may want to update your graphics driver.");
+                    + "supported, you may want to update your graphics driver.");
         }
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        // glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         /* Create window with specified OpenGL context */
         id = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -127,9 +125,8 @@ public class Window {
         /* Center window on screen */
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(id,
-                         (vidmode.width() - width) / 2,
-                         (vidmode.height() - height) / 2
-        );
+                (vidmode.width() - width) / 2,
+                (vidmode.height() - height) / 2);
 
         /* Create OpenGL context */
         glfwMakeContextCurrent(id);
@@ -150,6 +147,24 @@ public class Window {
             }
         };
         glfwSetKeyCallback(id, keyCallback);
+
+        /* set resizing callbacks */
+        setResizeCallback(id);
+    }
+    
+    private void setResizeCallback(long id) {
+        /* Set resize callback */
+        windowSizeCallback = new GLFWWindowSizeCallback() {
+
+            @Override
+            public void invoke(long window, int argWidth, int argHeight) {
+                width = argWidth;
+                height = argHeight;
+                hasResized = true;
+            }
+
+        };
+        glfwSetWindowSizeCallback(id, windowSizeCallback);
     }
 
     /**
@@ -174,8 +189,10 @@ public class Window {
      * Updates the screen.
      */
     public void update() {
+        hasResized = false;
         glfwSwapBuffers(id);
         glfwPollEvents();
+
     }
 
     /**
@@ -184,6 +201,7 @@ public class Window {
     public void destroy() {
         glfwDestroyWindow(id);
         keyCallback.free();
+        windowSizeCallback.free();
     }
 
     /**
@@ -209,4 +227,15 @@ public class Window {
         return this.vsync;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public boolean hasResized() {
+        return hasResized;
+    }
 }

@@ -470,10 +470,14 @@ public class DynamicRenderer {
         int uniView = program.getUniformLocation("view");
         program.setUniform(uniView, view);
 
+        setProjection(width, height);
+    }
+
+    public void setProjection(int width, int height) {
         /* Set projection matrix to an orthographic projection */
         Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
-        int uniProjection = program.getUniformLocation("projection");
-        program.setUniform(uniProjection, projection);
+        int uniformProjection = program.getUniformLocation("projection");
+        program.setUniform(uniformProjection, projection);
     }
 
     /**
