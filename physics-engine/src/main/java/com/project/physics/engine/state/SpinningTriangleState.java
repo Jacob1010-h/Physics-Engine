@@ -41,6 +41,7 @@ import com.project.physics.engine.graphic.VertexArrayObject;
 import com.project.physics.engine.graphic.VertexBufferObject;
 import com.project.physics.engine.graphic.shader.Shader;
 import com.project.physics.engine.graphic.shader.ShaderProgram;
+import com.project.physics.engine.graphic.shader.ShaderProgram.ShaderLocations;
 import com.project.physics.engine.math.Matrix4f;
 
 /**
@@ -149,11 +150,11 @@ public class SpinningTriangleState implements State {
         specifyVertexAttributes();
 
         /* Get uniform location for the model matrix */
-        uniModel = program.getUniformLocation("model");
+        uniModel = program.getUniformLocation(ShaderLocations.MODEL);
 
         /* Set view matrix to identity matrix */
         Matrix4f view = new Matrix4f();
-        int uniView = program.getUniformLocation("view");
+        int uniView = program.getUniformLocation(ShaderLocations.VIEW);
         program.setUniform(uniView, view);
 
         /* Get width and height for calculating the ratio */
@@ -168,7 +169,7 @@ public class SpinningTriangleState implements State {
 
         /* Set projection matrix to an orthographic projection */
         Matrix4f projection = Matrix4f.orthographic(-ratio, ratio, -1f, 1f, -1f, 1f);
-        int uniProjection = program.getUniformLocation("projection");
+        int uniProjection = program.getUniformLocation(ShaderLocations.PROJECTION);
         program.setUniform(uniProjection, projection);
     }
 
@@ -186,12 +187,12 @@ public class SpinningTriangleState implements State {
      */
     private void specifyVertexAttributes() {
         /* Specify Vertex Pointer */
-        int posAttrib = program.getAttributeLocation("position");
+        int posAttrib = program.getAttributeLocation(ShaderLocations.POSITION);
         program.enableVertexAttribute(posAttrib);
         program.pointVertexAttribute(posAttrib, 3, 6 * Float.BYTES, 0);
 
         /* Specify Color Pointer */
-        int colAttrib = program.getAttributeLocation("color");
+        int colAttrib = program.getAttributeLocation(ShaderLocations.COLOR);
         program.enableVertexAttribute(colAttrib);
         program.pointVertexAttribute(colAttrib, 3, 6 * Float.BYTES, 3 * Float.BYTES);
     }
