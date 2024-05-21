@@ -2,7 +2,7 @@ package com.project.physics.engine.game;
 
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicRenderer;
+import com.project.physics.engine.graphic.window.DynamicCamera;
 import com.project.physics.engine.math.Vector2f;
 
 /**
@@ -54,7 +54,7 @@ public class PhysicsEntity {
         position = position.add(difference).add(new Vector2f(0.0f, -150f).scale(delta * delta));
     }
     
-    public void render(DynamicRenderer renderer, float alpha) {
+    public void render(DynamicCamera renderer, float alpha) {
         Vector2f interpolatedPosition = previousPosition.lerp(position, alpha);
         float x = interpolatedPosition.x;
         float y = interpolatedPosition.y;
