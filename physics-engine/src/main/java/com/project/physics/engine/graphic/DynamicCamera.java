@@ -55,6 +55,8 @@ import com.project.physics.engine.graphic.shader.Shader;
 import com.project.physics.engine.graphic.shader.ShaderProgram;
 import com.project.physics.engine.graphic.shader.ShaderProgram.ShaderLocations;
 import com.project.physics.engine.graphic.shader.Texture;
+import com.project.physics.engine.graphic.shader.VertexArrayObject;
+import com.project.physics.engine.graphic.shader.VertexBufferObject;
 import com.project.physics.engine.math.Matrix4f;
 import com.project.physics.engine.text.Font;
 
