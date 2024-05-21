@@ -17,9 +17,9 @@ import org.lwjgl.system.MemoryStack;
 
 import com.project.physics.engine.game.CircleConstraint;
 import com.project.physics.engine.game.PhysicsEntity;
+import com.project.physics.engine.graphic.DynamicCamera;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicRenderer;
 import com.project.physics.engine.math.Vector2f;
 
 /**
@@ -28,7 +28,7 @@ import com.project.physics.engine.math.Vector2f;
  */
 public class PhysicsEngineState implements State {
 
-    private final DynamicRenderer renderer;
+    private final DynamicCamera renderer;
     private Texture texture;
     private final ArrayList<PhysicsEntity> physicsEntities = new ArrayList<>();
     private int gameWidth;
@@ -36,7 +36,7 @@ public class PhysicsEngineState implements State {
     private GLFWMouseButtonCallback mouseCallback;
     private final float deltaStep = 8f;
 
-    public PhysicsEngineState(DynamicRenderer renderer) {
+    public PhysicsEngineState(DynamicCamera renderer) {
         this.renderer = renderer;
     }
     

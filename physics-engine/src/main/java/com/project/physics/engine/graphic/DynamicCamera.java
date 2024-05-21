@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.project.physics.engine.graphic.window;
+package com.project.physics.engine.graphic;
 
 import java.awt.FontFormatException;
 import java.io.FileInputStream;
@@ -50,8 +50,6 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import com.project.physics.engine.core.Game;
-import com.project.physics.engine.graphic.VertexArrayObject;
-import com.project.physics.engine.graphic.VertexBufferObject;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Shader;
 import com.project.physics.engine.graphic.shader.ShaderProgram;
@@ -64,7 +62,7 @@ import com.project.physics.engine.text.Font;
  *
  * @author Heiko Brumme
  */
-public class DynamicRenderer {
+public class DynamicCamera {
 
     private VertexArrayObject vao;
     private VertexBufferObject vbo;
@@ -90,7 +88,7 @@ public class DynamicRenderer {
         try {
             font = new Font(new FileInputStream("resources/Inconsolata.ttf"), 16);
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(DynamicRenderer.class.getName()).log(Level.CONFIG, null, ex);
+            Logger.getLogger(DynamicCamera.class.getName()).log(Level.CONFIG, null, ex);
             font = new Font();
         }
         debugFont = new Font(12, false);

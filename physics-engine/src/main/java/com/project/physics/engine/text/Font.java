@@ -41,9 +41,9 @@ import java.util.Map;
 
 import org.lwjgl.system.MemoryUtil;
 
+import com.project.physics.engine.graphic.DynamicCamera;
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicRenderer;
 
 /**
  * This class contains a font texture for drawing text.
@@ -364,7 +364,7 @@ public class Font {
      * @param y        Y coordinate of the text position
      * @param c        Color to use
      */
-    public void drawText(DynamicRenderer renderer, CharSequence text, float x, float y, Color c) {
+    public void drawText(DynamicCamera renderer, CharSequence text, float x, float y, Color c) {
         int textHeight = getHeight(text);
 
         float drawX = x;
@@ -402,7 +402,7 @@ public class Font {
      * @param x        X coordinate of the text position
      * @param y        Y coordinate of the text position
      */
-    public void drawText(DynamicRenderer renderer, CharSequence text, float x, float y) {
+    public void drawText(DynamicCamera renderer, CharSequence text, float x, float y) {
         drawText(renderer, text, x, y, Color.WHITE);
     }
 

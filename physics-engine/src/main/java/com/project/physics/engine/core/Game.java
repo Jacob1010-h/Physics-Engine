@@ -32,8 +32,8 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
-import com.project.physics.engine.graphic.window.DynamicRenderer;
-import com.project.physics.engine.graphic.window.Window;
+import com.project.physics.engine.graphic.DynamicCamera;
+import com.project.physics.engine.graphic.Window;
 import com.project.physics.engine.state.PhysicsEngineState;
 import com.project.physics.engine.state.PongGameState;
 import com.project.physics.engine.state.SpinningTriangleState;
@@ -71,7 +71,7 @@ public abstract class Game {
     /**
      * Used for rendering.
      */
-    protected DynamicRenderer renderer;
+    protected DynamicCamera renderer;
     /**
      * Stores the current state.
      */
@@ -82,7 +82,7 @@ public abstract class Game {
      */
     public Game() {
         timer = new Timer();
-        renderer = new DynamicRenderer();
+        renderer = new DynamicCamera();
         state = new StateMachine();
     }
 
