@@ -277,12 +277,12 @@ public class ShaderProgram {
     }
 
     public enum ShaderLocations {
-        TEX_IMAGE,
-        MODEL,
-        VIEW,
-        PROJECTION,
-        POSITION,
-        COLOR,
-        TEX_COORD;
+        texImage,
+        model,
+        view,
+        projection,
+        position,
+        color,
+        texcoord;
     }
 }

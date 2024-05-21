@@ -456,17 +456,17 @@ public class DynamicCamera {
         specifyVertexAttributes();
 
         /* Set texture uniform */
-        int uniTex = program.getUniformLocation(ShaderLocations.TEX_IMAGE);
+        int uniTex = program.getUniformLocation(ShaderLocations.texImage);
         program.setUniform(uniTex, 0);
 
         /* Set model matrix to identity matrix */
         Matrix4f model = new Matrix4f();
-        int uniModel = program.getUniformLocation(ShaderLocations.MODEL);
+        int uniModel = program.getUniformLocation(ShaderLocations.model);
         program.setUniform(uniModel, model);
 
         /* Set view matrix to identity matrix */
         Matrix4f view = new Matrix4f();
-        int uniView = program.getUniformLocation(ShaderLocations.VIEW);
+        int uniView = program.getUniformLocation(ShaderLocations.view);
         program.setUniform(uniView, view);
 
         setProjection(width, height);
@@ -475,7 +475,7 @@ public class DynamicCamera {
     public void setProjection(int width, int height) {
         /* Set projection matrix to an orthographic projection */
         Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
-        int uniformProjection = program.getUniformLocation(ShaderLocations.PROJECTION);
+        int uniformProjection = program.getUniformLocation(ShaderLocations.projection);
         program.setUniform(uniformProjection, projection);
     }
 
@@ -484,17 +484,17 @@ public class DynamicCamera {
      */
     private void specifyVertexAttributes() {
         /* Specify Vertex Pointer */
-        int posAttrib = program.getAttributeLocation(ShaderLocations.POSITION);
+        int posAttrib = program.getAttributeLocation(ShaderLocations.position);
         program.enableVertexAttribute(posAttrib);
         program.pointVertexAttribute(posAttrib, 2, 8 * Float.BYTES, 0);
 
         /* Specify Color Pointer */
-        int colAttrib = program.getAttributeLocation(ShaderLocations.COLOR);
+        int colAttrib = program.getAttributeLocation(ShaderLocations.color);
         program.enableVertexAttribute(colAttrib);
         program.pointVertexAttribute(colAttrib, 4, 8 * Float.BYTES, 2 * Float.BYTES);
 
         /* Specify Texture Pointer */
-        int texAttrib = program.getAttributeLocation(ShaderLocations.TEX_COORD);
+        int texAttrib = program.getAttributeLocation(ShaderLocations.texcoord);
         program.enableVertexAttribute(texAttrib);
         program.pointVertexAttribute(texAttrib, 2, 8 * Float.BYTES, 6 * Float.BYTES);
     }
