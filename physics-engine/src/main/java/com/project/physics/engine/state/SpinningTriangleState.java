@@ -37,11 +37,11 @@ import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
 import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import org.lwjgl.system.MemoryStack;
 
-import com.project.physics.engine.graphic.VertexArrayObject;
-import com.project.physics.engine.graphic.VertexBufferObject;
 import com.project.physics.engine.graphic.shader.Shader;
 import com.project.physics.engine.graphic.shader.ShaderProgram;
 import com.project.physics.engine.graphic.shader.ShaderProgram.ShaderLocations;
+import com.project.physics.engine.graphic.shader.VertexArrayObject;
+import com.project.physics.engine.graphic.shader.VertexBufferObject;
 import com.project.physics.engine.math.Matrix4f;
 
 /**
