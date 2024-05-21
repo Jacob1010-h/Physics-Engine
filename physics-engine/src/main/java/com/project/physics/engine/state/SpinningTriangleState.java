@@ -150,11 +150,11 @@ public class SpinningTriangleState implements State {
         specifyVertexAttributes();
 
         /* Get uniform location for the model matrix */
-        uniModel = program.getUniformLocation(ShaderLocations.MODEL);
+        uniModel = program.getUniformLocation(ShaderLocations.model);
 
         /* Set view matrix to identity matrix */
         Matrix4f view = new Matrix4f();
-        int uniView = program.getUniformLocation(ShaderLocations.VIEW);
+        int uniView = program.getUniformLocation(ShaderLocations.view);
         program.setUniform(uniView, view);
 
         /* Get width and height for calculating the ratio */
@@ -169,7 +169,7 @@ public class SpinningTriangleState implements State {
 
         /* Set projection matrix to an orthographic projection */
         Matrix4f projection = Matrix4f.orthographic(-ratio, ratio, -1f, 1f, -1f, 1f);
-        int uniProjection = program.getUniformLocation(ShaderLocations.PROJECTION);
+        int uniProjection = program.getUniformLocation(ShaderLocations.projection);
         program.setUniform(uniProjection, projection);
     }
 
@@ -187,12 +187,12 @@ public class SpinningTriangleState implements State {
      */
     private void specifyVertexAttributes() {
         /* Specify Vertex Pointer */
-        int posAttrib = program.getAttributeLocation(ShaderLocations.POSITION);
+        int posAttrib = program.getAttributeLocation(ShaderLocations.position);
         program.enableVertexAttribute(posAttrib);
         program.pointVertexAttribute(posAttrib, 3, 6 * Float.BYTES, 0);
 
         /* Specify Color Pointer */
-        int colAttrib = program.getAttributeLocation(ShaderLocations.COLOR);
+        int colAttrib = program.getAttributeLocation(ShaderLocations.color);
         program.enableVertexAttribute(colAttrib);
         program.pointVertexAttribute(colAttrib, 3, 6 * Float.BYTES, 3 * Float.BYTES);
     }
