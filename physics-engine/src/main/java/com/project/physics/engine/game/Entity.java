@@ -25,7 +25,7 @@ package com.project.physics.engine.game;
 
 import com.project.physics.engine.graphic.shader.Color;
 import com.project.physics.engine.graphic.shader.Texture;
-import com.project.physics.engine.graphic.window.DynamicRenderer;
+import com.project.physics.engine.graphic.window.DynamicCamera;
 import com.project.physics.engine.math.Vector2f;
 
 /**
@@ -114,7 +114,7 @@ public abstract class Entity {
      * @param renderer Renderer for batching
      * @param alpha    Alpha value, needed for interpolation
      */
-    public void render(DynamicRenderer renderer, float alpha) {
+    public void render(DynamicCamera renderer, float alpha) {
         Vector2f interpolatedPosition = previousPosition.lerp(position, alpha);
         float x = interpolatedPosition.x;
         float y = interpolatedPosition.y;
