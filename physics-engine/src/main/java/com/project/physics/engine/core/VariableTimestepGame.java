@@ -23,7 +23,7 @@
  */
 package com.project.physics.engine.core;
 
-import static org.lwjgl.opengl.GL11.glViewport;
+import java.util.function.BooleanSupplier;
 
 /**
  * This class contains the implementation for a variable timestep game loop.
@@ -33,19 +33,17 @@ import static org.lwjgl.opengl.GL11.glViewport;
 public class VariableTimestepGame extends Game {
 
     @Override
-    public void gameLoop() {
+    public void gameLoop(BooleanSupplier hasResized) {
+        
         float delta;
-
+        
         while (running) {
             /* Check if game should close */
             if (window.isClosing()) {
                 running = false;
             }
-
-            if (window.hasResized()) {
-                renderer.setProjection(window.getWidth(), window.getHeight());
-                glViewport(0, 0, window.getWidth(), window.getHeight());
-            }
+            
+            super.gameLoop(hasResized);
 
             /* Get delta time */
             delta = timer.getDelta();
@@ -54,7 +52,7 @@ public class VariableTimestepGame extends Game {
             input();
 
             /* Update game and timer UPS */
-            update(delta);
+            update(delta, hasResized.getAsBoolean());
             timer.updateUPS();
 
             /* Render game and update timer FPS */
@@ -65,9 +63,9 @@ public class VariableTimestepGame extends Game {
             timer.update();
 
             /* Draw FPS, UPS and Context version */
-            int height = renderer.getDebugTextHeight("Context");
-            renderer.drawDebugText("FPS: " + timer.getFPS() + " | UPS: " + timer.getUPS(), 5, 5 + height);
-            renderer.drawDebugText("Context: " + (Game.isDefaultContext() ? "3.2 core" : "2.1"), 5, 5);
+            int height = camera.getDebugTextHeight("Context");
+            camera.drawDebugText("FPS: " + timer.getFPS() + " | UPS: " + timer.getUPS(), 5, 5 + height);
+            camera.drawDebugText("Context: " + (Game.isDefaultContext() ? "3.2 core" : "2.1"), 5, 5);
 
             /* Update window to show the new screen */
             window.update();

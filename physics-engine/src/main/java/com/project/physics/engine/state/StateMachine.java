@@ -78,13 +78,13 @@ public class StateMachine implements State {
     }
 
     @Override
-    public void update() {
-        currentState.update();
+    public void update(boolean hasResized) {
+        currentState.update(hasResized);
     }
 
     @Override
-    public void update(float delta) {
-        currentState.update(delta);
+    public void update(float delta, boolean hasResized) {
+        currentState.update(delta, hasResized);
     }
 
     @Override

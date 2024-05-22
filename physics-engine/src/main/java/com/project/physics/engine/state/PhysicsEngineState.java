@@ -3,6 +3,7 @@ package com.project.physics.engine.state;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -75,7 +76,7 @@ public class PhysicsEngineState implements State {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float delta, boolean hasResized) {
         for (int i = 0; i < (int) deltaStep; i++) {
             for (int j = 0; j < physicsEntities.size(); j++) {
                 PhysicsEntity entity1 = physicsEntities.get(j);
@@ -95,9 +96,11 @@ public class PhysicsEngineState implements State {
                 }
 
                 /*Update the entities to complete the loop */
-                entity1.update(delta/deltaStep);
+                entity1.update(delta / deltaStep);
             }
         }
+        if (hasResized)
+            System.out.println("has resized: " + hasResized);
     }
 
     @Override
