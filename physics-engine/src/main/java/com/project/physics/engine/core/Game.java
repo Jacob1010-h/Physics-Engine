@@ -80,7 +80,7 @@ public abstract class Game {
     protected StateMachine state;
 
     /**
-     * Default contructor for the game.
+     * Default constructor for the game.
      */
     public Game() {
         timer = new Timer();
@@ -102,7 +102,7 @@ public abstract class Game {
      * Releases resources that where used by the game.
      */
     public void dispose() {
-        /* Dipose renderer */
+        /* Dispose renderer */
         camera.dispose();
 
         /* Set empty state to trigger the exit method in the current state */

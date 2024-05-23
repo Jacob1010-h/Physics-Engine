@@ -102,7 +102,7 @@ public class PhysicsEngineState implements State {
                 /* Check the boarder for any collisions */
                 entity1.checkBorderCollision(windowWidth, windowHeight);
 
-                /* Check the entities in the area for any collisions with eachother */
+                /* Check the entities in the area for any collisions with each other */
                 for (int k = j + 1; k < physicsEntities.size(); k++) {
                     PhysicsEntity entity2 = physicsEntities.get(k);
                     if (!entity1.hasCollided(entity2))

@@ -83,6 +83,7 @@ public class Window {
      * @param height Height of the drawing area
      * @param title  Title of the window
      * @param vsync  Set to true, if you want v-sync
+     * @param camera
      */
     public Window(int width, int height, CharSequence title, boolean vsync, DynamicCamera camera) {
         this.width = width;

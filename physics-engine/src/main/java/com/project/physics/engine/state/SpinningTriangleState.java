@@ -52,32 +52,34 @@ import com.project.physics.engine.math.Matrix4f;
 public class SpinningTriangleState implements State {
 
     private final CharSequence vertexSource
-                               = "#version 150 core\n"
-                                 + "\n"
-                                 + "in vec3 position;\n"
-                                 + "in vec3 color;\n"
-                                 + "\n"
-                                 + "out vec3 vertexColor;\n"
-                                 + "\n"
-                                 + "uniform mat4 model;\n"
-                                 + "uniform mat4 view;\n"
-                                 + "uniform mat4 projection;\n"
-                                 + "\n"
-                                 + "void main() {\n"
-                                 + "    vertexColor = color;\n"
-                                 + "    mat4 mvp = projection * view * model;\n"
-                                 + "    gl_Position = mvp * vec4(position, 1.0);\n"
-                                 + "}";
+                               = """
+                                 #version 150 core
+                                 
+                                 in vec3 position;
+                                 in vec3 color;
+                                 
+                                 out vec3 vertexColor;
+                                 
+                                 uniform mat4 model;
+                                 uniform mat4 view;
+                                 uniform mat4 projection;
+                                 
+                                 void main() {
+                                     vertexColor = color;
+                                     mat4 mvp = projection * view * model;
+                                     gl_Position = mvp * vec4(position, 1.0);
+                                 }""";
     private final CharSequence fragmentSource
-                               = "#version 150 core\n"
-                                 + "\n"
-                                 + "in vec3 vertexColor;\n"
-                                 + "\n"
-                                 + "out vec4 fragColor;\n"
-                                 + "\n"
-                                 + "void main() {\n"
-                                 + "    fragColor = vec4(vertexColor, 1.0);\n"
-                                 + "}";
+                               = """
+                                 #version 150 core
+                                 
+                                 in vec3 vertexColor;
+                                 
+                                 out vec4 fragColor;
+                                 
+                                 void main() {
+                                     fragColor = vec4(vertexColor, 1.0);
+                                 }""";
 
     private VertexArrayObject vao;
     private VertexBufferObject vbo;
