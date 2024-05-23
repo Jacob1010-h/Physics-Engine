@@ -131,7 +131,7 @@ public abstract class Game {
         }
 
         /* Create GLFW window */
-        window = new Window(640, 480, "Simple Game - "+gameType.toString(), true);
+        window = new Window(640, 480, "Simple Game - " + gameType.toString(), true, camera);
 
         /* Initialize timer */
         timer.init();
@@ -174,8 +174,8 @@ public abstract class Game {
             return;
         
         if (hasResized.getAsBoolean()) {
-            camera.setProjection(window.getWidth(), window.getHeight());
             glViewport(0, 0, window.getWidth(), window.getHeight());
+            camera.setProjection(window.getWidth(), window.getHeight());
         }
     };
 
@@ -190,7 +190,7 @@ public abstract class Game {
      * Updates the game (fixed timestep).
      */
     public void update() {
-        state.update(window.hasResized().getAsBoolean());
+        state.update(window.hasResized().getAsBoolean(), window.getWidth(), window.getHeight());
     }
 
     /**
@@ -200,7 +200,8 @@ public abstract class Game {
      * @param hasResized
      */
     public void update(float delta, boolean hasResized) {
-        state.update(delta, hasResized);    }
+        state.update(delta, hasResized, window.getWidth(), window.getHeight());
+    }
 
     /**
      * Renders the game (no interpolation).

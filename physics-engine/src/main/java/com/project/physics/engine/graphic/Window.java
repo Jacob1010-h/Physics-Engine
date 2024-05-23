@@ -56,6 +56,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
+import static org.lwjgl.opengl.GL11.glViewport;
 import org.lwjgl.opengl.GLCapabilities;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -83,7 +84,7 @@ public class Window {
      * @param title  Title of the window
      * @param vsync  Set to true, if you want v-sync
      */
-    public Window(int width, int height, CharSequence title, boolean vsync) {
+    public Window(int width, int height, CharSequence title, boolean vsync, DynamicCamera camera) {
         this.width = width;
         this.height = height;
         this.vsync = vsync;
@@ -151,10 +152,10 @@ public class Window {
         glfwSetKeyCallback(id, keyCallback);
 
         /* set resizing callbacks */
-        setResizeCallback(id);
+        setResizeCallback(id, camera);
     }
     
-    private void setResizeCallback(long id) {
+    private void setResizeCallback(long id, DynamicCamera camera) {
         /* Set resize callback */
         windowSizeCallback = new GLFWWindowSizeCallback() {
 
@@ -163,6 +164,8 @@ public class Window {
                 width = argWidth;
                 height = argHeight;
                 hasResized = () -> true;
+                glViewport(0, 0, width, height);
+                camera.setProjection(width, height);
             }
 
         };
@@ -194,7 +197,6 @@ public class Window {
         hasResized = () -> false;
         glfwSwapBuffers(id);
         glfwPollEvents();
-
     }
 
     /**
@@ -239,5 +241,9 @@ public class Window {
 
     public BooleanSupplier hasResized() {
         return hasResized;
+    }
+
+    public long getId() {
+        return id;
     }
 }
