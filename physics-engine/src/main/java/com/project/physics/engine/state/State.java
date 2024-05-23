@@ -47,17 +47,19 @@ public interface State {
 
     /**
      * Updates the state (fixed timestep).
+     * @param hasResized
      */
-    public default void update() {
-        update(1f / Game.TARGET_UPS);
+    public default void update(boolean hasResized) {
+        update(1f / Game.TARGET_UPS, hasResized);
     }
 
     /**
      * Updates the state (variable timestep)
      *
      * @param delta Time difference in seconds
+     * @param hasResized
      */
-    public void update(float delta);
+    public void update(float delta, boolean hasResized);
 
     /**
      * Renders the state (no interpolation).

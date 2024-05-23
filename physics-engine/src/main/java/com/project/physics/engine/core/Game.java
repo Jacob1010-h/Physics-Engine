@@ -23,6 +23,7 @@
  */
 package com.project.physics.engine.core;
 
+import java.util.function.BooleanSupplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +32,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 import com.project.physics.engine.graphic.DynamicCamera;
 import com.project.physics.engine.graphic.Window;
@@ -71,7 +73,7 @@ public abstract class Game {
     /**
      * Used for rendering.
      */
-    protected DynamicCamera renderer;
+    protected DynamicCamera camera;
     /**
      * Stores the current state.
      */
@@ -82,7 +84,7 @@ public abstract class Game {
      */
     public Game() {
         timer = new Timer();
-        renderer = new DynamicCamera();
+        camera = new DynamicCamera();
         state = new StateMachine();
     }
 
@@ -92,7 +94,7 @@ public abstract class Game {
      */
     public void start(GameType gameType) {
         init(gameType);
-        gameLoop();
+        gameLoop(window.hasResized());
         dispose();
     }
 
@@ -101,7 +103,7 @@ public abstract class Game {
      */
     public void dispose() {
         /* Dipose renderer */
-        renderer.dispose();
+        camera.dispose();
 
         /* Set empty state to trigger the exit method in the current state */
         state.change(null);
@@ -135,7 +137,7 @@ public abstract class Game {
         timer.init();
 
         /* Initialize renderer */
-        renderer.init();
+        camera.init();
 
         /* Initialize states */
         initStates(gameType);
@@ -148,10 +150,10 @@ public abstract class Game {
      * Initializes the states.
      * @param gameType
      */
-    public void initStates(GameType gameType) {        
+    public void initStates(GameType gameType) {
         switch (gameType) {
-            case PHYSICS -> state.add("game", new PhysicsEngineState(renderer));
-            case PONG -> state.add("game", new PongGameState(renderer));
+            case PHYSICS -> state.add("game", new PhysicsEngineState(camera));
+            case PONG -> state.add("game", new PongGameState(camera));
             case TRIANGLE -> state.add("game", new SpinningTriangleState());
         }
         state.change("game");
@@ -160,9 +162,22 @@ public abstract class Game {
     /**
      * The game loop. <br>
      * For implementation take a look at <code>VariableDeltaGame</code> and
-     * <code>FixedTimestepGame</code>.
+     * <code>FixedTimestepGame</code>
+    
+     * 
+     * This super implementation of game loop is supposed to be wrapped 
+     * inside of the while loop in the upper implementation of Game 
+     * @param hasResized
      */
-    public abstract void gameLoop();
+    public void gameLoop(BooleanSupplier hasResized) {
+        if (!running)
+            return;
+        
+        if (hasResized.getAsBoolean()) {
+            camera.setProjection(window.getWidth(), window.getHeight());
+            glViewport(0, 0, window.getWidth(), window.getHeight());
+        }
+    };
 
     /**
      * Handles input.
@@ -175,17 +190,17 @@ public abstract class Game {
      * Updates the game (fixed timestep).
      */
     public void update() {
-        state.update();
+        state.update(window.hasResized().getAsBoolean());
     }
 
     /**
      * Updates the game (variable timestep).
      *
      * @param delta Time difference in seconds
+     * @param hasResized
      */
-    public void update(float delta) {
-        state.update(delta);
-    }
+    public void update(float delta, boolean hasResized) {
+        state.update(delta, hasResized);    }
 
     /**
      * Renders the game (no interpolation).

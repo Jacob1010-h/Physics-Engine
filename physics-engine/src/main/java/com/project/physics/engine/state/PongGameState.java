@@ -66,7 +66,7 @@ public class PongGameState implements State {
 
     @SuppressWarnings("incomplete-switch")
     @Override
-    public void update(float delta) {
+    public void update(float delta, boolean hasResized) {
         /* Update position */
         player.update(delta);
         opponent.update(delta);

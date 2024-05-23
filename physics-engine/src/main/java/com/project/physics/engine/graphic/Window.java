@@ -23,6 +23,8 @@
  */
 package com.project.physics.engine.graphic;
 
+import java.util.function.BooleanSupplier;
+
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
@@ -69,7 +71,7 @@ public class Window {
     private boolean vsync;
 
     private int width, height;
-    private boolean hasResized;
+    private BooleanSupplier hasResized;
     private GLFWWindowSizeCallback windowSizeCallback;
 
     /**
@@ -86,7 +88,7 @@ public class Window {
         this.height = height;
         this.vsync = vsync;
 
-        hasResized = false;
+        hasResized = () -> false;
 
         /* Creating a temporary window for getting the available OpenGL version */
         glfwDefaultWindowHints();
@@ -160,7 +162,7 @@ public class Window {
             public void invoke(long window, int argWidth, int argHeight) {
                 width = argWidth;
                 height = argHeight;
-                hasResized = true;
+                hasResized = () -> true;
             }
 
         };
@@ -189,7 +191,7 @@ public class Window {
      * Updates the screen.
      */
     public void update() {
-        hasResized = false;
+        hasResized = () -> false;
         glfwSwapBuffers(id);
         glfwPollEvents();
 
@@ -235,7 +237,7 @@ public class Window {
         return height;
     }
 
-    public boolean hasResized() {
+    public BooleanSupplier hasResized() {
         return hasResized;
     }
 }

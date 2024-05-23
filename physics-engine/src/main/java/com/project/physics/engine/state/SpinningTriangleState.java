@@ -96,7 +96,7 @@ public class SpinningTriangleState implements State {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float delta, boolean hasResized) {
         previousAngle = angle;
         angle += delta * angelPerSecond;
     }

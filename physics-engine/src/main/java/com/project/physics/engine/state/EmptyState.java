@@ -35,7 +35,7 @@ public class EmptyState implements State {
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float delta, boolean hasResized) {
     }
 
     @Override
