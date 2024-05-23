@@ -61,9 +61,10 @@ public class VariableTimestepGame extends Game {
 
             /* Update timer */
             timer.update();
-
+            
             /* Draw FPS, UPS and Context version */
             int height = camera.getDebugTextHeight("Context");
+            camera.drawDebugText("Mouse Coords: " + camera.getMouseCoords().toString(), 5, height * 2 + 5);
             camera.drawDebugText("FPS: " + timer.getFPS() + " | UPS: " + timer.getUPS(), 5, 5 + height);
             camera.drawDebugText("Context: " + (Game.isDefaultContext() ? "3.2 core" : "2.1"), 5, 5);
 

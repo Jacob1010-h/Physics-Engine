@@ -23,9 +23,9 @@
  */
 package com.project.physics.engine;
 
-import com.project.physics.engine.core.FixedTimestepGame;
 import com.project.physics.engine.core.Game;
 import com.project.physics.engine.core.GameType;
+import com.project.physics.engine.core.VariableTimestepGame;
 
 /**
  * The main class creates a fixed timestep game and starts it.
@@ -40,7 +40,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Game game = new FixedTimestepGame();
+        Game game = new VariableTimestepGame();
         game.start(GameType.PHYSICS);
     }
 
