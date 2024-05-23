@@ -62,7 +62,7 @@ public class PhysicsEntity {
     }
 
     public void checkBorderCollision(int gameWidth, int gameHeight) {
-        Vector2f center = constraint.getCenter();
+        Vector2f center = new Vector2f(gameWidth / 2f, gameHeight / 2f);
         Vector2f distanceVector = center.subtract(position);
         float distance = distanceVector.length();
         if (distance > (constraint.getRadius() - radius)) {

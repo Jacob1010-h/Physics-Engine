@@ -3,7 +3,6 @@ package com.project.physics.engine.state;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.function.BooleanSupplier;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
@@ -72,17 +71,36 @@ public class PhysicsEngineState implements State {
     // Using this method too much within a short amount of time will result in the texture never being spawned
     private void makePhysicsEntityAtMouse(float mouseX, float mouseY) {
         physicsEntities
-                .add(new PhysicsEntity(Color.GREEN, texture, mouseX - 10, -mouseY + gameHeight - 10, 10, new CircleConstraint(new Vector2f(gameWidth / 2f, gameHeight / 2f), 200f)));
+                .add(new PhysicsEntity(Color.GREEN, texture, mouseX - 10, -mouseY + gameHeight - 10, 10,
+                        new CircleConstraint(new Vector2f(gameWidth / 2f, gameHeight / 2f), 200f)));
+    }
+    
+    private void updateWindowDimensions() {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            long window = GLFW.glfwGetCurrentContext();
+            IntBuffer widthBuffer = stack.mallocInt(1);
+            IntBuffer heightBuffer = stack.mallocInt(1);
+            GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
+
+            /* Set the game width and height */
+            gameWidth = widthBuffer.get();
+            gameHeight = heightBuffer.get();
+        }
     }
 
     @Override
-    public void update(float delta, boolean hasResized) {
+    public void update(float delta, boolean hasResized, int windowWidth, int windowHeight) {
+        if (hasResized) {
+            updateWindowDimensions();
+        }
+
+        /* Physics Update Step */
         for (int i = 0; i < (int) deltaStep; i++) {
             for (int j = 0; j < physicsEntities.size(); j++) {
                 PhysicsEntity entity1 = physicsEntities.get(j);
 
                 /* Check the boarder for any collisions */
-                entity1.checkBorderCollision(gameWidth, gameHeight);
+                entity1.checkBorderCollision(windowWidth, windowHeight);
 
                 /* Check the entities in the area for any collisions with eachother */
                 for (int k = j + 1; k < physicsEntities.size(); k++) {
@@ -99,8 +117,6 @@ public class PhysicsEngineState implements State {
                 entity1.update(delta / deltaStep);
             }
         }
-        if (hasResized)
-            System.out.println("has resized: " + hasResized);
     }
 
     @Override
@@ -118,16 +134,7 @@ public class PhysicsEngineState implements State {
     @Override
     public void enter() {
         /* Get width and height of framebuffer */
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            long window = GLFW.glfwGetCurrentContext();
-            IntBuffer widthBuffer = stack.mallocInt(1);
-            IntBuffer heightBuffer = stack.mallocInt(1);
-            GLFW.glfwGetFramebufferSize(window, widthBuffer, heightBuffer);
-
-            /* Set the game width and height */
-            gameWidth = widthBuffer.get();
-            gameHeight = heightBuffer.get();
-        }
+        updateWindowDimensions();
 
         /* Load texture */
         texture = Texture.loadTexture("./physics-engine/src/main/resources/pong.png");

@@ -48,9 +48,11 @@ public interface State {
     /**
      * Updates the state (fixed timestep).
      * @param hasResized
+     * @param windowWidth
+     * @param windowHeight
      */
-    public default void update(boolean hasResized) {
-        update(1f / Game.TARGET_UPS, hasResized);
+    public default void update(boolean hasResized, int windowWidth, int windowHeight) {
+        update(1f / Game.TARGET_UPS, hasResized, windowWidth, windowHeight);
     }
 
     /**
@@ -58,8 +60,10 @@ public interface State {
      *
      * @param delta Time difference in seconds
      * @param hasResized
+     * @param windowWidth
+     * @param windowHeight
      */
-    public void update(float delta, boolean hasResized);
+    public void update(float delta, boolean hasResized, int windowWidth, int windowHeight);
 
     /**
      * Renders the state (no interpolation).

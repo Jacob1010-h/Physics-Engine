@@ -26,12 +26,15 @@ package com.project.physics.engine.graphic;
 import java.awt.FontFormatException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
@@ -58,6 +61,7 @@ import com.project.physics.engine.graphic.shader.Texture;
 import com.project.physics.engine.graphic.shader.VertexArrayObject;
 import com.project.physics.engine.graphic.shader.VertexBufferObject;
 import com.project.physics.engine.math.Matrix4f;
+import com.project.physics.engine.math.Vector2f;
 import com.project.physics.engine.text.Font;
 
 /**
@@ -78,6 +82,8 @@ public class DynamicCamera {
     private Font font;
     private Font debugFont;
 
+    private float mouseX, mouseY;
+
     /** Initializes the renderer. */
     public void init() {
         /* Setup shader programs */
@@ -94,7 +100,10 @@ public class DynamicCamera {
             Logger.getLogger(DynamicCamera.class.getName()).log(Level.CONFIG, null, ex);
             font = new Font();
         }
-        debugFont = new Font(12, false);
+        debugFont = new Font(20, false);
+
+        /* Initialize mouse coordinates */
+        setMouseCoords();
     }
 
     /**
@@ -102,6 +111,19 @@ public class DynamicCamera {
      */
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    public void setMouseCoords() {
+        long window = GLFW.glfwGetCurrentContext();
+        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+        glfwGetCursorPos(window, x, y);
+        mouseX = (float) x.get();
+        mouseY = (float) y.get();
+    }
+
+    public Vector2f getMouseCoords() {
+        return new Vector2f(mouseX, mouseY);
     }
 
     /**
@@ -152,6 +174,9 @@ public class DynamicCamera {
             vertices.clear();
             numVertices = 0;
         }
+
+        /* Update cached mouse position coords */
+        setMouseCoords();
     }
 
     /**
